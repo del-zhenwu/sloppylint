@@ -84,6 +84,10 @@ def module_exists(module_name: str) -> bool:
         return spec is not None
     except (ModuleNotFoundError, ValueError, ImportError, AttributeError):
         return False
+    except Exception:
+        # Catch any other exceptions that might occur during module spec lookup
+        # (e.g., pydantic v1 compatibility issues with Python 3.14+)
+        return True  # Assume exists to avoid false positives
 
 
 def validate_import(module_name: str, name: Optional[str] = None) -> Optional[str]:
