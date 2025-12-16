@@ -173,7 +173,9 @@ class NestedTernary(RegexPattern):
 
         issues: list[Issue] = []
         for match in self.pattern.finditer(line):
-            if is_in_string_or_comment(line, match.start()):
+            if is_in_string_or_comment(
+                line, match.start(), self.multiline_string_lines, lineno
+            ):
                 continue
             issues.append(
                 self.create_issue(file=file, line=lineno, column=match.start(), code=line.strip())

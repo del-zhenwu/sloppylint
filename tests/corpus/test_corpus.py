@@ -74,6 +74,20 @@ class TestFalsePositives:
         ]
         assert len(unexpected) == 0, f"HTTP status codes flagged as magic numbers: {unexpected}"
 
+    def test_multiline_strings_no_false_positives(self) -> None:
+        """Content inside multi-line strings should not trigger warnings."""
+        file = CORPUS_DIR / "false_positives" / "multiline_strings.py"
+        detector = Detector()
+        issues = detector.scan([file])
+
+        # Should not flag magic_number, debug_print, or nested_ternary inside docstrings
+        pattern_issues = [
+            i for i in issues if i.pattern_id in ("magic_number", "debug_print", "nested_ternary")
+        ]
+        assert (
+            len(pattern_issues) == 0
+        ), f"Unexpected warnings inside multi-line strings: {pattern_issues}"
+
 
 class TestTruePositives:
     """Tests that validate we DO flag problematic code."""

@@ -11,6 +11,7 @@ from sloppy.analyzers.duplicates import find_cross_file_duplicates
 from sloppy.analyzers.unused_imports import find_unused_imports
 from sloppy.patterns import get_all_patterns
 from sloppy.patterns.base import Issue
+from sloppy.patterns.helpers import get_multiline_string_lines
 
 SEVERITY_ORDER = {
     "low": 0,
@@ -139,6 +140,13 @@ class Detector:
         # Run AST analyzer
         analyzer = ASTAnalyzer(path, content, self.patterns)
         issues.extend(analyzer.analyze(tree))
+
+        # Get multi-line string locations for accurate string detection
+        multiline_string_lines = get_multiline_string_lines(content)
+
+        # Set multi-line context on patterns before line-based checks
+        for pattern in self.patterns:
+            pattern.multiline_string_lines = multiline_string_lines
 
         # Run line-based patterns
         lines = content.splitlines()

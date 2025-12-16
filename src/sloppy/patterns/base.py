@@ -49,6 +49,8 @@ class BasePattern(ABC):
     severity: Severity = Severity.MEDIUM
     axis: str = "noise"
     message: str = ""
+    # Set by detector per-file to track multi-line string locations
+    multiline_string_lines: set[int] | None = None
 
     def create_issue(
         self,

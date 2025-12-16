@@ -110,7 +110,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/corpus/**" = ["F821", "F401", "E999"]  # Test corpus has intentionally bad code
+"tests/corpus/**" = ["F821", "F401", "F811", "E999", "W293", "I001"]  # Test corpus has intentionally bad code
 
 [tool.ruff.lint.isort]
 known-first-party = ["sloppy"]
