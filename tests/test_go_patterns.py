@@ -3,7 +3,6 @@
 from pathlib import Path
 
 from sloppy.detector import Detector
-from sloppy.languages import Language
 
 FIXTURES_DIR = Path(__file__).parent / "fixtures" / "go"
 
@@ -14,7 +13,7 @@ class TestGoPatterns:
     def test_go_debug_print_detected(self) -> None:
         """Go debug print statements should be detected."""
         file = FIXTURES_DIR / "sample_with_issues.go"
-        detector = Detector(target_languages={Language.GO})
+        detector = Detector(languages=["go"])
         issues = detector.scan([file])
 
         debug_issues = [i for i in issues if i.pattern_id == "go_debug_print"]
@@ -23,7 +22,7 @@ class TestGoPatterns:
     def test_go_overconfident_comment_detected(self) -> None:
         """Go overconfident comments should be detected."""
         file = FIXTURES_DIR / "sample_with_issues.go"
-        detector = Detector(target_languages={Language.GO})
+        detector = Detector(languages=["go"])
         issues = detector.scan([file])
 
         overconfident = [i for i in issues if i.pattern_id == "go_overconfident_comment"]
@@ -32,7 +31,7 @@ class TestGoPatterns:
     def test_go_hedging_comment_detected(self) -> None:
         """Go hedging comments should be detected."""
         file = FIXTURES_DIR / "sample_with_issues.go"
-        detector = Detector(target_languages={Language.GO})
+        detector = Detector(languages=["go"])
         issues = detector.scan([file])
 
         hedging = [i for i in issues if i.pattern_id == "go_hedging_comment"]
@@ -41,7 +40,7 @@ class TestGoPatterns:
     def test_go_redundant_comment_detected(self) -> None:
         """Go redundant comments should be detected."""
         file = FIXTURES_DIR / "sample_with_issues.go"
-        detector = Detector(target_languages={Language.GO})
+        detector = Detector(languages=["go"])
         issues = detector.scan([file])
 
         redundant = [i for i in issues if i.pattern_id == "go_redundant_comment"]
@@ -50,7 +49,7 @@ class TestGoPatterns:
     def test_go_todo_comment_detected(self) -> None:
         """Go TODO comments should be detected."""
         file = FIXTURES_DIR / "sample_with_issues.go"
-        detector = Detector(target_languages={Language.GO})
+        detector = Detector(languages=["go"])
         issues = detector.scan([file])
 
         todo = [i for i in issues if i.pattern_id == "go_todo_comment"]
@@ -59,7 +58,7 @@ class TestGoPatterns:
     def test_clean_go_code_minimal_issues(self) -> None:
         """Clean Go code should have minimal or no issues."""
         file = FIXTURES_DIR / "clean_code.go"
-        detector = Detector(target_languages={Language.GO})
+        detector = Detector(languages=["go"])
         issues = detector.scan([file])
 
         # Clean code might have no issues at all
@@ -71,7 +70,7 @@ class TestGoLanguageFilter:
 
     def test_go_language_filter(self) -> None:
         """When filtering for Go, only Go files should be scanned."""
-        detector = Detector(target_languages={Language.GO})
+        detector = Detector(languages=["go"])
         issues = detector.scan([FIXTURES_DIR.parent])  # Scan parent fixtures dir
 
         # Should only find issues in Go files

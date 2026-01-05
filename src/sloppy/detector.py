@@ -8,7 +8,7 @@ import re
 from pathlib import Path
 
 from sloppy.analyzers.ast_analyzer import ASTAnalyzer
-from sloppy.languages import Language, detect_language, get_supported_extensions
+from sloppy.language_detector import get_extensions_for_languages
 from sloppy.patterns import get_all_patterns
 from sloppy.patterns.base import Issue
 from sloppy.patterns.helpers import get_multiline_string_lines
@@ -31,7 +31,7 @@ class Detector:
         disabled_patterns: list[str] | None = None,
         min_severity: str = "low",
         root_path: Path | None = None,
-        target_languages: set[Language] | None = None,
+        languages: list[str] | None = None,
     ):
         self.ignore_patterns = ignore_patterns or []
         self.include_patterns = include_patterns or []
@@ -39,7 +39,10 @@ class Detector:
         self.min_severity = min_severity
         self.min_severity_level = SEVERITY_ORDER.get(min_severity, 0)
         self.root_path = root_path or Path.cwd()
-        self.target_languages = target_languages  # None means all languages
+        self.languages = languages or ["python"]  # Default to Python for backwards compatibility
+        
+        # Get all file extensions for the specified languages
+        self.file_extensions = get_extensions_for_languages(self.languages)
 
         # Load patterns
         self.patterns = [p for p in get_all_patterns() if p.id not in self.disabled_patterns]
@@ -48,24 +51,15 @@ class Detector:
         """Scan all paths and return issues."""
         issues: list[Issue] = []
 
-        # Determine which file extensions to look for
-        if self.target_languages:
-            extensions = []
-            for lang in self.target_languages:
-                extensions.extend(get_supported_extensions(lang))
-        else:
-            extensions = get_supported_extensions()
-
         for path in paths:
             if path.is_file():
                 if self._should_scan(path):
                     file_issues = self._scan_file(path)
                     issues.extend(file_issues)
             elif path.is_dir():
-                # Scan all supported file types
-                for ext in extensions:
-                    pattern = f"*{ext}"
-                    for file_path in path.rglob(pattern):
+                # Scan for all supported file extensions
+                for ext in self.file_extensions:
+                    for file_path in path.rglob(f"*{ext}"):
                         if self._should_scan(file_path):
                             file_issues = self._scan_file(file_path)
                             issues.extend(file_issues)
@@ -88,13 +82,8 @@ class Detector:
 
     def _should_scan(self, path: Path) -> bool:
         """Check if a file should be scanned."""
-        # Check if file has a supported extension
-        language = detect_language(path)
-        if language is None:
-            return False
-
-        # If target languages specified, check if file's language is in the target set
-        if self.target_languages and language not in self.target_languages:
+        # Check if file extension is in our supported list
+        if path.suffix not in self.file_extensions:
             return False
 
         # Convert to relative POSIX path for consistent matching across platforms
@@ -156,19 +145,15 @@ class Detector:
         """Scan a single file."""
         issues: list[Issue] = []
 
-        # Detect file language
-        language = detect_language(path)
-        if language is None:
-            return issues
-
         try:
             content = path.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError):
             return issues
 
-        # For Python files, use AST-based analysis
-        if language == Language.PYTHON:
-            # Parse AST
+        # Only Python files use AST analysis for now
+        # Other languages use line-based pattern matching only
+        if path.suffix in [".py", ".pyw"]:
+            # Parse AST for Python files
             try:
                 tree = ast.parse(content, filename=str(path))
             except SyntaxError:
@@ -185,7 +170,7 @@ class Detector:
             for pattern in self.patterns:
                 pattern.multiline_string_lines = multiline_string_lines
 
-        # For all languages, run line-based patterns
+        # Run line-based patterns (for all languages)
         lines = content.splitlines()
         for pattern in self.patterns:
             if hasattr(pattern, "check_line"):

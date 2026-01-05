@@ -41,7 +41,9 @@ class Reporter(ABC):
     """Base reporter class."""
 
     @abstractmethod
-    def report(self, issues: list["Issue"], score: "SlopScore") -> None:
+    def report(
+        self, issues: list["Issue"], score: "SlopScore", languages: list[str] | None = None
+    ) -> None:
         """Report issues and score."""
         pass
 
@@ -59,16 +61,25 @@ class TerminalReporter(Reporter):
         if self.use_rich:
             self.console = Console()
 
-    def report(self, issues: list["Issue"], score: "SlopScore") -> None:
+    def report(
+        self, issues: list["Issue"], score: "SlopScore", languages: list[str] | None = None
+    ) -> None:
         """Print report to terminal."""
         if self.use_rich:
-            self._report_rich(issues, score)
+            self._report_rich(issues, score, languages)
         else:
-            self._report_plain(issues, score)
+            self._report_plain(issues, score, languages)
 
-    def _report_rich(self, issues: list["Issue"], score: "SlopScore") -> None:
+    def _report_rich(
+        self, issues: list["Issue"], score: "SlopScore", languages: list[str] | None = None
+    ) -> None:
         """Print rich formatted report."""
         console = self.console
+
+        # Print language info if provided
+        if languages:
+            lang_str = ", ".join(sorted(languages))
+            console.print(f"[dim]Scanned languages: {lang_str}[/dim]")
 
         if not issues:
             console.print("[bold green]No issues found. Clean code![/bold green]")
@@ -151,8 +162,15 @@ class TerminalReporter(Reporter):
         console.print()
         console.print(f"Verdict: [{verdict_color} bold]{score.verdict}[/{verdict_color} bold]")
 
-    def _report_plain(self, issues: list["Issue"], score: "SlopScore") -> None:
+    def _report_plain(
+        self, issues: list["Issue"], score: "SlopScore", languages: list[str] | None = None
+    ) -> None:
         """Print plain text report (no colors)."""
+        # Print language info if provided
+        if languages:
+            lang_str = ", ".join(sorted(languages))
+            print(f"Scanned languages: {lang_str}")
+
         if not issues:
             print("No issues found. Clean code!")
             self._print_score_plain(score)
@@ -219,30 +237,43 @@ class TerminalReporter(Reporter):
 class JSONReporter(Reporter):
     """JSON output reporter."""
 
-    def report(self, issues: list["Issue"], score: "SlopScore") -> None:
+    def report(
+        self, issues: list["Issue"], score: "SlopScore", languages: list[str] | None = None
+    ) -> None:
         """Print JSON to stdout."""
-        data = self._build_report(issues, score)
+        data = self._build_report(issues, score, languages)
         print(json.dumps(data, indent=2))
 
-    def write_file(self, issues: list["Issue"], score: "SlopScore", path: str) -> None:
+    def write_file(
+        self,
+        issues: list["Issue"],
+        score: "SlopScore",
+        path: str,
+        languages: list[str] | None = None,
+    ) -> None:
         """Write JSON to file."""
-        data = self._build_report(issues, score)
+        data = self._build_report(issues, score, languages)
         Path(path).write_text(json.dumps(data, indent=2))
 
-    def _build_report(self, issues: list["Issue"], score: "SlopScore") -> dict[str, object]:
+    def _build_report(
+        self, issues: list["Issue"], score: "SlopScore", languages: list[str] | None = None
+    ) -> dict[str, object]:
         """Build the JSON report structure."""
-        return {
-            "summary": {
-                "total_issues": len(issues),
-                "score": {
-                    "noise": score.noise,
-                    "quality": score.quality,
-                    "style": score.style,
-                    "structure": score.structure,
-                    "total": score.total,
-                },
-                "verdict": score.verdict,
+        summary: dict[str, object] = {
+            "total_issues": len(issues),
+            "score": {
+                "noise": score.noise,
+                "quality": score.quality,
+                "style": score.style,
+                "structure": score.structure,
+                "total": score.total,
             },
+            "verdict": score.verdict,
+            **({"languages": sorted(languages)} if languages else {}),
+        }
+        
+        return {
+            "summary": summary,
             "issues": [
                 {
                     "pattern_id": issue.pattern_id,

@@ -3,7 +3,6 @@
 from pathlib import Path
 
 from sloppy.detector import Detector
-from sloppy.languages import Language
 
 FIXTURES_DIR = Path(__file__).parent / "fixtures" / "js"
 
@@ -14,7 +13,7 @@ class TestJavaScriptPatterns:
     def test_js_debug_console_detected(self) -> None:
         """JavaScript debug console statements should be detected."""
         file = FIXTURES_DIR / "sample_with_issues.js"
-        detector = Detector(target_languages={Language.JAVASCRIPT})
+        detector = Detector(languages=["javascript"])
         issues = detector.scan([file])
 
         debug_issues = [i for i in issues if i.pattern_id == "js_debug_console"]
@@ -23,7 +22,7 @@ class TestJavaScriptPatterns:
     def test_js_overconfident_comment_detected(self) -> None:
         """JavaScript overconfident comments should be detected."""
         file = FIXTURES_DIR / "sample_with_issues.js"
-        detector = Detector(target_languages={Language.JAVASCRIPT})
+        detector = Detector(languages=["javascript"])
         issues = detector.scan([file])
 
         overconfident = [i for i in issues if i.pattern_id == "js_overconfident_comment"]
@@ -32,7 +31,7 @@ class TestJavaScriptPatterns:
     def test_js_hedging_comment_detected(self) -> None:
         """JavaScript hedging comments should be detected."""
         file = FIXTURES_DIR / "sample_with_issues.js"
-        detector = Detector(target_languages={Language.JAVASCRIPT})
+        detector = Detector(languages=["javascript"])
         issues = detector.scan([file])
 
         hedging = [i for i in issues if i.pattern_id == "js_hedging_comment"]
@@ -41,7 +40,7 @@ class TestJavaScriptPatterns:
     def test_js_var_keyword_detected(self) -> None:
         """JavaScript var keyword should be detected."""
         file = FIXTURES_DIR / "sample_with_issues.js"
-        detector = Detector(target_languages={Language.JAVASCRIPT})
+        detector = Detector(languages=["javascript"])
         issues = detector.scan([file])
 
         var_issues = [i for i in issues if i.pattern_id == "js_var_keyword"]
@@ -50,7 +49,7 @@ class TestJavaScriptPatterns:
     def test_js_commented_code_detected(self) -> None:
         """JavaScript commented-out code should be detected."""
         file = FIXTURES_DIR / "sample_with_issues.js"
-        detector = Detector(target_languages={Language.JAVASCRIPT})
+        detector = Detector(languages=["javascript"])
         issues = detector.scan([file])
 
         commented = [i for i in issues if i.pattern_id == "js_commented_code"]
@@ -59,7 +58,7 @@ class TestJavaScriptPatterns:
     def test_clean_js_code_minimal_issues(self) -> None:
         """Clean JavaScript code should have minimal or no issues."""
         file = FIXTURES_DIR / "clean_code.js"
-        detector = Detector(target_languages={Language.JAVASCRIPT})
+        detector = Detector(languages=["javascript"])
         issues = detector.scan([file])
 
         # Clean code might have no issues at all
@@ -72,7 +71,7 @@ class TestTypeScriptPatterns:
     def test_ts_debug_console_detected(self) -> None:
         """TypeScript debug console statements should be detected."""
         file = FIXTURES_DIR / "sample_with_issues.ts"
-        detector = Detector(target_languages={Language.TYPESCRIPT})
+        detector = Detector(languages=["typescript"])
         issues = detector.scan([file])
 
         debug_issues = [i for i in issues if i.pattern_id == "js_debug_console"]
@@ -81,7 +80,7 @@ class TestTypeScriptPatterns:
     def test_ts_overconfident_comment_detected(self) -> None:
         """TypeScript overconfident comments should be detected."""
         file = FIXTURES_DIR / "sample_with_issues.ts"
-        detector = Detector(target_languages={Language.TYPESCRIPT})
+        detector = Detector(languages=["typescript"])
         issues = detector.scan([file])
 
         overconfident = [i for i in issues if i.pattern_id == "js_overconfident_comment"]
@@ -90,7 +89,7 @@ class TestTypeScriptPatterns:
     def test_ts_var_keyword_detected(self) -> None:
         """TypeScript var keyword should be detected."""
         file = FIXTURES_DIR / "sample_with_issues.ts"
-        detector = Detector(target_languages={Language.TYPESCRIPT})
+        detector = Detector(languages=["typescript"])
         issues = detector.scan([file])
 
         var_issues = [i for i in issues if i.pattern_id == "js_var_keyword"]
@@ -102,7 +101,7 @@ class TestJavaScriptLanguageFilter:
 
     def test_js_language_filter(self) -> None:
         """When filtering for JavaScript, only JS files should be scanned."""
-        detector = Detector(target_languages={Language.JAVASCRIPT})
+        detector = Detector(languages=["javascript"])
         issues = detector.scan([FIXTURES_DIR.parent])  # Scan parent fixtures dir
 
         # Should only find issues in JS files
@@ -116,7 +115,7 @@ class TestJavaScriptLanguageFilter:
 
     def test_ts_language_filter(self) -> None:
         """When filtering for TypeScript, only TS files should be scanned."""
-        detector = Detector(target_languages={Language.TYPESCRIPT})
+        detector = Detector(languages=["typescript"])
         issues = detector.scan([FIXTURES_DIR.parent])  # Scan parent fixtures dir
 
         # Should only find issues in TS files
