@@ -97,7 +97,16 @@ Traditional linters catch style and syntax issues. But AI-generated code introdu
 - **Placeholder code** - `pass`, `TODO`, functions that do nothing
 - **Confident wrongness** - code that looks right but fails at runtime
 
-Sloppylint targets these AI-specific patterns that escape Pylint, Flake8, and code review.
+Sloppylint targets these AI-specific patterns that escape Pylint, Flake8, ESLint, and code review.
+
+### Frontend-Focused Detection
+
+Building on insights from [KarpeSlop](https://github.com/CodeDeficient/KarpeSlop), Sloppylint includes **30 TypeScript/JavaScript patterns** specifically designed for modern frontend frameworks:
+
+- **React Hooks Anti-patterns** - `useEffect` with derived state, empty deps, stale closures
+- **TypeScript Type Safety** - `any` type abuse, unsafe assertions, missing generics  
+- **Hallucinated Imports** - React APIs from wrong packages (e.g., `useRouter` from 'react')
+- **Frontend-Specific Issues** - IIFE wrappers, nested ternaries, magic CSS values
 
 ---
 
@@ -194,6 +203,50 @@ def validate_email(email):
 
 # 🚨 hedging_comment - AI uncertainty
 x = calculate()  # should work hopefully
+```
+
+### TypeScript/React Patterns (KarpeSlop-Inspired)
+
+```typescript
+// 🚨 hallucinated_react_import - AI hallucinating package locations
+import { useRouter, Link } from 'react';  // Bug: These are from 'next/router' and 'next/link'
+
+// ✅ Fix: Import from correct packages
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+```
+
+```typescript
+// 🚨 ts_any_type_usage - TypeScript type safety bypass
+function processData(data: any): any {  // Bug: Loses all type safety
+    return data.someProp;
+}
+
+// ✅ Fix: Use proper types or unknown
+function processData<T>(data: T): T {
+    return data;
+}
+```
+
+```typescript
+// 🚨 js_useEffect_derived_state - React anti-pattern
+useEffect(() => {
+    setDerived(name.toUpperCase());  // Bug: Unnecessary re-render
+}, [name]);
+
+// ✅ Fix: Use useMemo for derived state
+const derived = useMemo(() => name.toUpperCase(), [name]);
+```
+
+```typescript
+// 🚨 js_setState_in_loop - Multiple re-renders
+for (let i = 0; i < items.length; i++) {
+    setTotal(total + items[i]);  // Bug: Re-renders on each iteration
+}
+
+// ✅ Fix: Batch the update
+const newTotal = items.reduce((sum, item) => sum + item, 0);
+setTotal(newTotal);
 ```
 
 ---
@@ -335,7 +388,7 @@ format = "detailed"  # or "compact" or "json"
 git clone https://github.com/rsionnach/sloppylint.git
 cd sloppylint
 pip install -e ".[dev]"
-pytest tests/ -v  # 68 tests should pass
+pytest tests/ -v  # 99 tests should pass
 ```
 
 See [AGENTS.md](AGENTS.md) for coding conventions and pattern implementation guide.

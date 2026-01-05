@@ -309,19 +309,49 @@ def calculate_score(issues: list[Issue]) -> SlopScore:
 - `go_hedging_comment` - Uncertain language (should work, hopefully, probably)
 - `go_python_pattern` - Python patterns leaked into Go code
 
-### JavaScript/TypeScript Patterns (8 total)
+### JavaScript/TypeScript Patterns (30 total)
 
-#### Noise (4)
+#### Noise (8)
 - `js_debug_console` - Debug console statements
 - `js_todo_comment` - TODO/FIXME/XXX/HACK comments
 - `js_redundant_comment` - Comments that restate obvious code
 - `js_commented_code` - Commented-out code
+- `js_redundant_self_explanatory_comment` - Variable assignment to itself with comment
+- `js_excessive_boilerplate_comment` - Boilerplate comments restating the obvious
+- `js_debug_log_with_comment` - Debug logs with apologetic comments
+- `js_production_console_log` - Console logging in production code
 
-#### Style (4)
+#### Quality/Hallucinations (4)
+- `js_hallucinated_react_import` - React APIs imported from wrong packages (e.g., useRouter from 'react')
+- `js_hallucinated_next_import` - Next.js APIs imported from 'react'
+- `js_todo_implementation_placeholder` - TODO comments indicating AI gave up
+- `js_assumption_comment` - Comments with unverified assumptions
+
+#### Style (7)
 - `js_overconfident_comment` - Overconfident language
 - `js_hedging_comment` - Uncertain language
 - `js_python_pattern` - Python patterns leaked into JS/TS code
 - `js_var_keyword` - Outdated `var` keyword (suggest `const`/`let`)
+- `js_unnecessary_iife` - Unnecessary IIFE wrappers for async calls
+- `js_nested_ternary_abuse` - Nested ternary hell
+- `js_magic_css_value` - Hardcoded magic CSS values
+
+#### TypeScript-specific (6)
+- `ts_any_type_usage` - 'any' type usage
+- `ts_array_any_type` - Array<any> type usage
+- `ts_generic_any_type` - Generic <any> type usage
+- `ts_unsafe_type_assertion` - Unsafe 'as any' type assertions
+- `ts_unsafe_double_type_assertion` - Unsafe double type assertions
+- `ts_index_signature_any` - Index signatures with 'any' type
+
+#### React-specific (4)
+- `js_useEffect_derived_state` - useEffect setting derived state (use useMemo instead)
+- `js_useEffect_empty_deps` - useEffect with empty dependency array
+- `js_setState_in_loop` - setState called inside loops (causes multiple re-renders)
+- `js_useCallback_no_deps` - useCallback with empty dependencies (stale closures)
+
+#### Structure (1)
+- `js_missing_error_handling` - Missing error handling for fetch/axios calls
 
 ## Beads Issue Tracking
 
@@ -362,11 +392,11 @@ bd done <id>
 6. Add Go fixture file in `tests/fixtures/go/`
 
 #### For JavaScript/TypeScript patterns:
-1. Choose category: `patterns/js/noise.py` or `patterns/js/style.py`
+1. Choose category: `patterns/js/noise.py`, `patterns/js/style.py`, `patterns/js/hallucinations.py`, `patterns/js/react.py`, `patterns/js/typescript.py`, or `patterns/js/structure.py`
 2. Create class inheriting `RegexPattern`
 3. Define pattern regex and severity
 4. Register in `patterns/js/__init__.py` pattern list
-5. Add tests in `tests/test_js_patterns.py`
+5. Add tests in `tests/test_karpeslop_patterns.py` or `tests/test_js_patterns.py`
 6. Add JS/TS fixture file in `tests/fixtures/js/`
 
 ### Adding AST-Based Detection (Python only)

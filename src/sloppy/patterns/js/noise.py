@@ -53,9 +53,64 @@ class JSCommentedCode(RegexPattern):
     )
 
 
+class JSRedundantSelfExplanatoryComment(RegexPattern):
+    """Detect redundant comments explaining variable assignment to itself."""
+
+    id = "js_redundant_self_explanatory_comment"
+    severity = Severity.HIGH
+    axis = "noise"
+    message = "Redundant comment explaining variable assignment to itself - peak AI slop"
+    pattern = re.compile(
+        r"const\s+(\w+)\s*=\s*\1\s*;?\s*//\s*(?:set|assign|store)\s+\1\b",
+        re.IGNORECASE,
+    )
+
+
+class JSExcessiveBoilerplateComment(RegexPattern):
+    """Detect boilerplate comments that restate the obvious."""
+
+    id = "js_excessive_boilerplate_comment"
+    severity = Severity.MEDIUM
+    axis = "noise"
+    message = "Boilerplate comment that restates the obvious - adds zero insight"
+    pattern = re.compile(
+        r"//\s*This (?:function|component|hook|variable|method).* (?:does|is|handles?|returns?|takes?|processes?)",
+        re.IGNORECASE,
+    )
+
+
+class JSDebugLogWithComment(RegexPattern):
+    """Detect debug logs with apologetic comments."""
+
+    id = "js_debug_log_with_comment"
+    severity = Severity.MEDIUM
+    axis = "noise"
+    message = "Debug log with apologetic comment - AI trying to justify its existence"
+    pattern = re.compile(
+        r"console\.(log|debug|info)\([^)]+\)\s*;\s*//\s*(?:debug|temp|test|check|log|print)",
+        re.IGNORECASE,
+    )
+
+
+class JSProductionConsoleLog(RegexPattern):
+    """Detect console logging in production code."""
+
+    id = "js_production_console_log"
+    severity = Severity.MEDIUM
+    axis = "noise"
+    message = "Found console logging in production code - remove before deployment"
+    pattern = re.compile(
+        r"console\.(log|warn|error|info|debug|trace)\(",
+    )
+
+
 JS_NOISE_PATTERNS = [
     JSDebugConsole(),
     JSTodoComment(),
     JSRedundantComment(),
     JSCommentedCode(),
+    JSRedundantSelfExplanatoryComment(),
+    JSExcessiveBoilerplateComment(),
+    JSDebugLogWithComment(),
+    JSProductionConsoleLog(),
 ]
