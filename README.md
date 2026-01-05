@@ -2,7 +2,7 @@
 
 <div align="center">
   <h1>🐷 Sloppylint</h1>
-  <p><strong>Detect AI-generated code anti-patterns in your Python codebase.</strong></p>
+  <p><strong>Detect AI-generated code anti-patterns in your multi-language codebase.</strong></p>
   <p><em>Catches AI-specific anti-patterns that traditional linters miss</em></p>
 </div>
 
@@ -43,6 +43,51 @@ sloppylint .
 
 ---
 
+## 🌐 Multi-Language Support
+
+Sloppylint automatically detects and scans multiple programming languages in your codebase:
+
+| Language | File Extensions | Status |
+|----------|----------------|--------|
+| **Python** | `.py`, `.pyw` | ✅ Full support (AST + patterns) |
+| **JavaScript** | `.js`, `.jsx`, `.mjs`, `.cjs` | ✅ Pattern detection |
+| **TypeScript** | `.ts`, `.tsx` | ✅ Pattern detection |
+| **Go** | `.go` | ✅ Pattern detection |
+
+### Automatic Detection
+
+By default, Sloppylint **automatically detects** which languages are present in your project:
+
+```bash
+# Scans all supported languages found in the directory
+sloppylint .
+
+# Output shows detected languages:
+# Scanned languages: javascript, python, typescript
+```
+
+### Manual Language Override
+
+Advanced users can override automatic detection with the `--language` flag:
+
+```bash
+# Scan only Python files
+sloppylint src/ --language python
+
+# Scan multiple specific languages
+sloppylint src/ --language javascript,typescript
+
+# Case-insensitive language names
+sloppylint src/ --language Python,JavaScript
+```
+
+This is useful when:
+- You want to focus on specific languages in a polyglot codebase
+- You need faster scans by limiting scope
+- You're debugging language-specific issues
+
+---
+
 ## 🤔 Why Sloppylint Exists
 
 Traditional linters catch style and syntax issues. But AI-generated code introduces **new failure patterns** they weren't designed to detect:
@@ -72,11 +117,18 @@ Sloppylint targets these AI-specific patterns that escape Pylint, Flake8, and co
 ## 📥 What You Put In
 
 ```bash
-# Scan a directory
+# Automatic language detection - scans all supported languages
+sloppylint .
+
+# Scan a specific directory
 sloppylint src/
 
 # Scan specific files
 sloppylint app.py utils.py
+
+# Language-specific scanning
+sloppylint src/ --language python              # Python only
+sloppylint src/ --language javascript,typescript  # JS/TS only
 
 # Only high severity issues
 sloppylint --severity high
@@ -176,14 +228,23 @@ x = calculate()  # should work hopefully
 ## 🛠️ CLI Commands
 
 ```bash
-sloppylint .                    # 🔍 Scan current directory
+sloppylint .                    # 🔍 Scan current directory (auto-detect languages)
 sloppylint src/ tests/          # 📁 Scan multiple directories
+
+# Language selection
+sloppylint --language python    # 🐍 Scan Python only
+sloppylint --language js,ts     # 📜 Scan JavaScript & TypeScript
+sloppylint -l go                # 🚀 Scan Go only
+
+# Severity & reporting
 sloppylint --severity high      # ⚡ Only critical/high issues
 sloppylint --lenient            # 🎯 Same as --severity high
 sloppylint --strict             # 🔬 Report everything
 sloppylint --ci                 # 🚦 Exit 1 if any issues
 sloppylint --max-score 50       # 📊 Exit 1 if score > 50
 sloppylint --output report.json # 📋 Export JSON report
+
+# Filtering
 sloppylint --ignore "tests/*"   # 🚫 Exclude patterns
 sloppylint --disable magic_number # ⏭️ Skip specific checks
 sloppylint --version            # 📌 Show version
@@ -195,20 +256,22 @@ sloppylint --version            # 📌 Show version
 
 | Feature | Description | Status |
 |---------|-------------|--------|
-| 🌐 **Multi-Language Detection** | Catches patterns from JS, Java, Ruby, Go, C#, PHP | ✅ 100+ patterns |
-| 🔍 **Hallucinated Imports** | Detect non-existent packages | ✅ Done |
-| 📦 **Unused Imports** | AST-based detection | ✅ Done |
+| 🌐 **Multi-Language Support** | Python, JavaScript, TypeScript, Go | ✅ Auto-detection |
+| 🔍 **Smart Detection** | Automatic language identification | ✅ Done |
+| 🎯 **Manual Override** | `--language` flag for specific languages | ✅ Done |
+| 🤥 **Hallucinated Imports** | Detect non-existent packages | ✅ Done |
+| 📦 **Unused Imports** | AST-based detection (Python) | ✅ Done |
 | 💀 **Dead Code** | Unused functions/classes | ✅ Done |
 | 🔄 **Duplicate Detection** | Cross-file copy-paste | ✅ Done |
 | 🎨 **Rich Output** | Colors and tables (optional) | ✅ Done |
 | ⚙️ **Config Support** | pyproject.toml configuration | ✅ Done |
 
-### Language Patterns Detected
+### Cross-Language Pattern Detection
 
-LLMs are trained on code from many languages. When generating Python, they sometimes produce patterns from other languages:
+LLMs are trained on code from many languages. When generating code, they sometimes produce patterns from other languages:
 
-| Language | Example Mistakes | Python Fix |
-|----------|------------------|------------|
+| Language | Example Mistakes | Correct Alternative |
+|----------|------------------|---------------------|
 | **JavaScript** | `.push()`, `.length`, `.forEach()` | `.append()`, `len()`, `for` loop |
 | **Java** | `.equals()`, `.toString()`, `.isEmpty()` | `==`, `str()`, `not obj` |
 | **Ruby** | `.each`, `.nil?`, `.first`, `.last` | `for` loop, `is None`, `[0]`, `[-1]` |
