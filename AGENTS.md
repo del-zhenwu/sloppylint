@@ -1,9 +1,10 @@
-# Sloppy - Python AI Slop Detector
+# Sloppy - Multi-Language AI Slop Detector
 
 ## Project Overview
 
-Sloppy detects "AI slop" patterns in Python code - over-engineering, hallucinations, 
-dead code, and anti-patterns commonly produced by LLMs. Inspired by KarpeSlop.
+Sloppy detects "AI slop" patterns in Python, Go, JavaScript, and TypeScript code - 
+over-engineering, hallucinations, dead code, and anti-patterns commonly produced by LLMs. 
+Inspired by KarpeSlop.
 
 **Core concept**: Three axes of AI slop detection:
 1. **Noise** (Information Utility) - redundant comments, debug code, placeholders
@@ -19,26 +20,38 @@ sloppy/
 │   ├── __main__.py          # Entry point: python -m sloppy
 │   ├── cli.py               # Argument parsing (argparse)
 │   ├── detector.py          # Main orchestration
+│   ├── languages.py         # Language detection and configuration
 │   ├── scoring.py           # Slop index calculation
 │   ├── reporter.py          # Terminal + JSON output
 │   ├── config.py            # pyproject.toml / .sloppyrc support
 │   ├── patterns/
 │   │   ├── __init__.py      # Pattern registry
 │   │   ├── base.py          # BasePattern class
-│   │   ├── noise.py         # Axis 1 patterns
-│   │   ├── hallucinations.py # Axis 2 patterns
-│   │   ├── style.py         # Axis 3 patterns
-│   │   └── structure.py     # Structural anti-patterns
+│   │   ├── noise.py         # Axis 1 patterns (Python)
+│   │   ├── hallucinations.py # Axis 2 patterns (Python)
+│   │   ├── style.py         # Axis 3 patterns (Python)
+│   │   ├── structure.py     # Structural anti-patterns (Python)
+│   │   ├── go/              # Go-specific patterns
+│   │   │   ├── noise.py
+│   │   │   └── style.py
+│   │   └── js/              # JavaScript/TypeScript patterns
+│   │       ├── noise.py
+│   │       └── style.py
 │   └── analyzers/
 │       ├── __init__.py
-│       ├── ast_analyzer.py  # AST-based detection
+│       ├── ast_analyzer.py  # AST-based detection (Python)
 │       ├── import_validator.py # Package existence checks
 │       └── duplicate_finder.py # Cross-file similarity
 ├── tests/
 │   ├── conftest.py          # Pytest fixtures
 │   ├── test_patterns/       # Pattern-specific tests
 │   ├── test_analyzers/      # Analyzer tests
-│   └── fixtures/            # Sample Python files with known issues
+│   ├── test_languages.py    # Language detection tests
+│   ├── test_go_patterns.py  # Go pattern tests
+│   ├── test_js_patterns.py  # JS/TS pattern tests
+│   └── fixtures/            # Sample files with known issues
+│       ├── go/              # Go test files
+│       └── js/              # JS/TS test files
 ├── pyproject.toml
 ├── README.md
 ├── AGENTS.md
@@ -212,11 +225,12 @@ def test_none_default_not_flagged(fixture_path):
 usage: sloppy [-h] [--output FILE] [--format {compact,detailed,json}]
               [--severity {low,medium,high,critical}]
               [--ignore PATTERN] [--disable PATTERN_ID]
+              [--language LANG]
               [--strict | --lenient] [--ci] [--max-score N]
               [--version]
               [paths ...]
 
-Python AI Slop Detector
+Multi-Language AI Slop Detector
 
 positional arguments:
   paths                 Files or directories to scan (default: .)
@@ -228,6 +242,8 @@ options:
   --severity LEVEL      Minimum severity to report
   --ignore PATTERN      Glob pattern to exclude (repeatable)
   --disable ID          Disable specific pattern (repeatable)
+  --language LANG       Target language(s): python, go, javascript, typescript
+                        (repeatable). If not specified, auto-detects from extensions.
   --strict              Report all severities
   --lenient             Only critical and high
   --ci                  CI mode: exit 1 if issues found
@@ -254,30 +270,58 @@ def calculate_score(issues: list[Issue]) -> SlopScore:
     )
 ```
 
-## Pattern Registry (46 total)
+## Pattern Registry
 
-### Axis 1: Noise (10)
+### Python Patterns (46 total)
+
+#### Axis 1: Noise (10)
 - `redundant_comment`, `empty_docstring`, `generic_docstring`
 - `debug_print`, `debug_breakpoint`, `commented_code_block`
 - `excessive_logging`, `redundant_pass`, `obvious_type_comment`, `changelog_in_code`
 
-### Axis 2: Quality/Hallucinations (14)
+#### Axis 2: Quality/Hallucinations (14)
 - `hallucinated_import`, `wrong_stdlib_import`, `hallucinated_method`
 - `deprecated_api`, `todo_placeholder`, `pass_placeholder`, `ellipsis_placeholder`
 - `notimplemented_placeholder`, `assumption_comment`
 - `magic_number`, `magic_string`, `mutable_default_arg`
 - `wrong_exception_type`, `impossible_condition`
 
-### Axis 3: Style (10)
+#### Axis 3: Style (10)
 - `overconfident_comment`, `hedging_comment`, `apologetic_comment`
 - `god_function`, `deep_nesting`, `nested_ternary`
 - `single_letter_var`, `inconsistent_naming`, `overlong_line`, `multiple_statements`
 
-### Structural (12)
+#### Structural (12)
 - `single_method_class`, `unnecessary_inheritance`, `god_class`
 - `unused_import`, `star_import`, `circular_import_risk`
 - `bare_except`, `broad_except`, `empty_except`
 - `unreachable_code`, `duplicate_code`, `dead_code`
+
+### Go Patterns (6 total)
+
+#### Noise (3)
+- `go_debug_print` - Debug print statements with "debug", "test", "temp"
+- `go_todo_comment` - TODO/FIXME/XXX/HACK comments
+- `go_redundant_comment` - Comments that restate obvious code
+
+#### Style (3)
+- `go_overconfident_comment` - Overconfident language (obviously, clearly, simply)
+- `go_hedging_comment` - Uncertain language (should work, hopefully, probably)
+- `go_python_pattern` - Python patterns leaked into Go code
+
+### JavaScript/TypeScript Patterns (8 total)
+
+#### Noise (4)
+- `js_debug_console` - Debug console statements
+- `js_todo_comment` - TODO/FIXME/XXX/HACK comments
+- `js_redundant_comment` - Comments that restate obvious code
+- `js_commented_code` - Commented-out code
+
+#### Style (4)
+- `js_overconfident_comment` - Overconfident language
+- `js_hedging_comment` - Uncertain language
+- `js_python_pattern` - Python patterns leaked into JS/TS code
+- `js_var_keyword` - Outdated `var` keyword (suggest `const`/`let`)
 
 ## Beads Issue Tracking
 
@@ -299,15 +343,33 @@ bd done <id>
 
 ## Common Tasks
 
-### Adding a New Pattern
+### Adding a New Pattern (Language-Specific)
+
+#### For Python patterns:
 1. Choose category: `noise.py`, `hallucinations.py`, `style.py`, or `structure.py`
-2. Create class inheriting `BasePattern`
+2. Create class inheriting `BasePattern` or `ASTPattern`
 3. Implement `check_*` method (check_node, check_function, check_line, etc.)
 4. Register in `patterns/__init__.py`
 5. Add tests in `tests/test_patterns/`
 6. Add fixture file if needed
 
-### Adding AST-Based Detection
+#### For Go patterns:
+1. Choose category: `patterns/go/noise.py` or `patterns/go/style.py`
+2. Create class inheriting `RegexPattern`
+3. Define pattern regex and severity
+4. Register in `patterns/go/__init__.py` pattern list
+5. Add tests in `tests/test_go_patterns.py`
+6. Add Go fixture file in `tests/fixtures/go/`
+
+#### For JavaScript/TypeScript patterns:
+1. Choose category: `patterns/js/noise.py` or `patterns/js/style.py`
+2. Create class inheriting `RegexPattern`
+3. Define pattern regex and severity
+4. Register in `patterns/js/__init__.py` pattern list
+5. Add tests in `tests/test_js_patterns.py`
+6. Add JS/TS fixture file in `tests/fixtures/js/`
+
+### Adding AST-Based Detection (Python only)
 ```python
 # In ast_analyzer.py
 def visit_ExceptHandler(self, node):
@@ -316,24 +378,37 @@ def visit_ExceptHandler(self, node):
     self.generic_visit(node)
 ```
 
-### Adding Regex-Based Detection
+### Adding Regex-Based Detection (All languages)
 ```python
-# In patterns/noise.py
-class DebugPrint(BasePattern):
-    id = "debug_print"
-    pattern = re.compile(r'\bprint\s*\([^)]*\)')
-    
-    def check_line(self, line: str, lineno: int) -> list[Issue]:
-        if self.pattern.search(line):
-            return [self.create_issue(lineno, code=line.strip())]
-        return []
+# Example for Go patterns in patterns/go/noise.py
+class GoDebugPrint(RegexPattern):
+    id = "go_debug_print"
+    severity = Severity.MEDIUM
+    axis = "noise"
+    message = "Debug print statement - remove before production"
+    pattern = re.compile(r'\bfmt\.Print(ln|f)?\s*\([^)]*"(debug|DEBUG)\b')
+```
+
+## Language Support
+
+### Supported Languages
+- **Python** (.py) - Full AST and regex-based analysis
+- **Go** (.go) - Regex-based pattern detection
+- **JavaScript** (.js, .jsx) - Regex-based pattern detection
+- **TypeScript** (.ts, .tsx) - Regex-based pattern detection
+
+### Language Detection
+Language is auto-detected by file extension. Use `--language` to filter:
+```bash
+sloppylint --language python src/
+sloppylint --language go --language javascript src/
 ```
 
 ## Security Considerations
 
-- Never execute scanned code - AST parsing only
+- Never execute scanned code - AST parsing only (Python) or regex (Go/JS/TS)
 - Validate all file paths (no directory traversal)
-- Handle malformed Python files gracefully
+- Handle malformed files gracefully across all languages
 - Don't expose full file paths in public reports
 
 ## PR Guidelines
