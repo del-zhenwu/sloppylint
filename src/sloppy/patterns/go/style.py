@@ -39,7 +39,7 @@ class GoPythonPatterns(RegexPattern):
     axis = "style"
     message = "Python pattern in Go code - use Go idioms"
     pattern = re.compile(
-        r'\b(print\(|len\(|range\(|str\(|int\(|\.append\(|\.split\(|\.join\()',
+        r'(len\(|range\(|str\(|int\(|\.append\(|\.split\(|\.join\()',
         re.IGNORECASE,
     )
 

@@ -39,7 +39,7 @@ class JSPythonPatterns(RegexPattern):
     axis = "style"
     message = "Python pattern in JS/TS code - use JavaScript idioms"
     pattern = re.compile(
-        r'\b(\.append\(|len\(|range\(|str\(|int\()',
+        r'(\.append\(|len\(|range\(|str\(|int\()',
         re.IGNORECASE,
     )
 
