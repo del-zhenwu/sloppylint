@@ -101,7 +101,7 @@ Sloppylint targets these AI-specific patterns that escape Pylint, Flake8, ESLint
 
 ### Frontend-Focused Detection
 
-Building on insights from [KarpeSlop](https://github.com/CodeDeficient/KarpeSlop), Sloppylint includes **32 TypeScript/JavaScript patterns** specifically designed for modern frontend frameworks:
+Building on insights from [KarpeSlop](https://github.com/CodeDeficient/KarpeSlop), Sloppylint includes **30 TypeScript/JavaScript patterns** specifically designed for modern frontend frameworks:
 
 - **React Hooks Anti-patterns** - `useEffect` with derived state, empty deps, stale closures
 - **TypeScript Type Safety** - `any` type abuse, unsafe assertions, missing generics  

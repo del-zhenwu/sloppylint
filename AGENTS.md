@@ -309,7 +309,7 @@ def calculate_score(issues: list[Issue]) -> SlopScore:
 - `go_hedging_comment` - Uncertain language (should work, hopefully, probably)
 - `go_python_pattern` - Python patterns leaked into Go code
 
-### JavaScript/TypeScript Patterns (32 total)
+### JavaScript/TypeScript Patterns (30 total)
 
 #### Noise (8)
 - `js_debug_console` - Debug console statements
