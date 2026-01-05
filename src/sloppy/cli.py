@@ -9,6 +9,7 @@ from pathlib import Path
 from sloppy import __version__
 from sloppy.config import get_default_ignores, load_config
 from sloppy.detector import Detector
+from sloppy.language_detector import detect_languages, get_supported_languages, parse_language_arg
 from sloppy.reporter import JSONReporter, TerminalReporter
 from sloppy.scoring import calculate_score
 
@@ -17,7 +18,7 @@ def create_parser() -> argparse.ArgumentParser:
     """Create the argument parser."""
     parser = argparse.ArgumentParser(
         prog="sloppylint",
-        description="Python AI Slop Detector - Find over-engineering, hallucinations, and dead code",
+        description="Multi-language AI Slop Detector - Find over-engineering, hallucinations, and dead code",
     )
 
     parser.add_argument(
@@ -66,6 +67,13 @@ def create_parser() -> argparse.ArgumentParser:
         default=[],
         metavar="PATTERN",
         help="Only scan files matching glob pattern (can be repeated)",
+    )
+
+    parser.add_argument(
+        "--language",
+        "-l",
+        metavar="LANG",
+        help=f"Language(s) to scan (comma-separated). Supported: {', '.join(get_supported_languages())}. If not specified, automatically detects languages in the project.",
     )
 
     parser.add_argument(
@@ -155,6 +163,31 @@ def main(args: list[str] | None = None) -> int:
     # Collect all paths
     paths = [Path(p) for p in opts.paths]
 
+    # Determine languages to scan
+    if opts.language:
+        # Manual override via CLI
+        languages = parse_language_arg(opts.language)
+        if not languages:
+            print(f"Error: Invalid language(s) specified: {opts.language}", file=sys.stderr)
+            print(f"Supported languages: {', '.join(get_supported_languages())}", file=sys.stderr)
+            return 1
+    else:
+        # Automatic detection
+        languages = detect_languages(paths)
+        if not languages:
+            print("No supported language files found in the specified paths.", file=sys.stderr)
+            print(f"Supported languages: {', '.join(get_supported_languages())}", file=sys.stderr)
+            return 1
+
+    # Create detector and scan
+    detector = Detector(
+        ignore_patterns=ignore_patterns,
+        include_patterns=include_patterns,
+        disabled_patterns=config.disable,
+        min_severity=min_severity,
+        languages=list(languages),
+    )
+
     # Run detection
     issues = detector.scan(paths)
 
@@ -164,18 +197,18 @@ def main(args: list[str] | None = None) -> int:
     # Report results
     if config.format == "json" or opts.output:
         json_reporter = JSONReporter()
-        json_reporter.report(issues, score)
+        json_reporter.report(issues, score, languages=list(languages))
     else:
         terminal_reporter = TerminalReporter(
             format_style=config.format,
             min_severity=min_severity,
         )
-        terminal_reporter.report(issues, score)
+        terminal_reporter.report(issues, score, languages=list(languages))
 
     # Write JSON output if requested
     if opts.output:
         json_reporter = JSONReporter()
-        json_reporter.write_file(issues, score, opts.output)
+        json_reporter.write_file(issues, score, opts.output, languages=list(languages))
 
     # Determine exit code
     exit_code = 0

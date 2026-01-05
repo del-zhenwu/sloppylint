@@ -8,6 +8,7 @@ import re
 from pathlib import Path
 
 from sloppy.analyzers.ast_analyzer import ASTAnalyzer
+from sloppy.language_detector import get_extensions_for_languages
 from sloppy.patterns import get_all_patterns
 from sloppy.patterns.base import Issue
 from sloppy.patterns.helpers import get_multiline_string_lines
@@ -30,6 +31,7 @@ class Detector:
         disabled_patterns: list[str] | None = None,
         min_severity: str = "low",
         root_path: Path | None = None,
+        languages: list[str] | None = None,
     ):
         self.ignore_patterns = ignore_patterns or []
         self.include_patterns = include_patterns or []
@@ -37,6 +39,10 @@ class Detector:
         self.min_severity = min_severity
         self.min_severity_level = SEVERITY_ORDER.get(min_severity, 0)
         self.root_path = root_path or Path.cwd()
+        self.languages = languages or ["python"]  # Default to Python for backwards compatibility
+        
+        # Get all file extensions for the specified languages
+        self.file_extensions = get_extensions_for_languages(self.languages)
 
         # Load patterns
         self.patterns = [p for p in get_all_patterns() if p.id not in self.disabled_patterns]
@@ -51,10 +57,12 @@ class Detector:
                     file_issues = self._scan_file(path)
                     issues.extend(file_issues)
             elif path.is_dir():
-                for file_path in path.rglob("*.py"):
-                    if self._should_scan(file_path):
-                        file_issues = self._scan_file(file_path)
-                        issues.extend(file_issues)
+                # Scan for all supported file extensions
+                for ext in self.file_extensions:
+                    for file_path in path.rglob(f"*{ext}"):
+                        if self._should_scan(file_path):
+                            file_issues = self._scan_file(file_path)
+                            issues.extend(file_issues)
 
         # Filter by severity
         issues = [
@@ -74,7 +82,8 @@ class Detector:
 
     def _should_scan(self, path: Path) -> bool:
         """Check if a file should be scanned."""
-        if path.suffix != ".py":
+        # Check if file extension is in our supported list
+        if path.suffix not in self.file_extensions:
             return False
 
         # Convert to relative POSIX path for consistent matching across platforms
@@ -141,24 +150,27 @@ class Detector:
         except (OSError, UnicodeDecodeError):
             return issues
 
-        # Parse AST
-        try:
-            tree = ast.parse(content, filename=str(path))
-        except SyntaxError:
-            return issues
+        # Only Python files use AST analysis for now
+        # Other languages use line-based pattern matching only
+        if path.suffix in [".py", ".pyw"]:
+            # Parse AST for Python files
+            try:
+                tree = ast.parse(content, filename=str(path))
+            except SyntaxError:
+                return issues
 
-        # Run AST analyzer
-        analyzer = ASTAnalyzer(path, content, self.patterns)
-        issues.extend(analyzer.analyze(tree))
+            # Run AST analyzer
+            analyzer = ASTAnalyzer(path, content, self.patterns)
+            issues.extend(analyzer.analyze(tree))
 
-        # Get multi-line string locations for accurate string detection
-        multiline_string_lines = get_multiline_string_lines(content)
+            # Get multi-line string locations for accurate string detection
+            multiline_string_lines = get_multiline_string_lines(content)
 
-        # Set multi-line context on patterns before line-based checks
-        for pattern in self.patterns:
-            pattern.multiline_string_lines = multiline_string_lines
+            # Set multi-line context on patterns before line-based checks
+            for pattern in self.patterns:
+                pattern.multiline_string_lines = multiline_string_lines
 
-        # Run line-based patterns
+        # Run line-based patterns (for all languages)
         lines = content.splitlines()
         for pattern in self.patterns:
             if hasattr(pattern, "check_line"):
