@@ -132,7 +132,7 @@ class TerminalReporter(Reporter):
 
         # Create score table
         table = Table(
-            title="SLOPPY INDEX",
+            title="DEEPLINT INDEX",
             box=box.ROUNDED,
             show_header=False,
             title_style="bold",
@@ -210,7 +210,7 @@ class TerminalReporter(Reporter):
     def _print_score_plain(self, score: "SlopScore") -> None:
         """Print the score summary in plain text."""
         print("\n")
-        print("SLOPPY INDEX")
+        print("DEEPLINT INDEX")
         print("=" * 50)
         print(f"Information Utility (Noise)    : {score.noise} pts")
         print(f"Information Quality (Lies)     : {score.quality} pts")
