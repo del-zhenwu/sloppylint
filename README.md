@@ -359,8 +359,8 @@ pip install deeplint[rich]
 pip install deeplint[all]
 
 # Or install from source for development
-git clone https://github.com/del-zhenwu/sloppylint.git
-cd sloppylint
+git clone https://github.com/del-zhenwu/deeplint.git
+cd deeplint
 pip install -e ".[dev]"
 ```
 
@@ -385,8 +385,8 @@ format = "detailed"  # or "compact" or "json"
 ## 🤝 Contributing
 
 ```bash
-git clone https://github.com/del-zhenwu/sloppylint.git
-cd sloppylint
+git clone https://github.com/del-zhenwu/deeplint.git
+cd deeplint
 pip install -e ".[dev]"
 pytest tests/ -v  # 99 tests should pass
 ```

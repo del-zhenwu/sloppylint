@@ -52,8 +52,8 @@ all = [
 deeplint = "sloppy.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/del-zhenwu/sloppylint"
-Repository = "https://github.com/del-zhenwu/sloppylint"
+Homepage = "https://github.com/del-zhenwu/deeplint"
+Repository = "https://github.com/del-zhenwu/deeplint"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/sloppy"]

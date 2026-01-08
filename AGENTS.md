@@ -68,8 +68,8 @@ deeplint/
 ### Setup
 ```bash
 # Clone and setup
-git clone https://github.com/del-zhenwu/sloppylint.git
-cd sloppylint
+git clone https://github.com/del-zhenwu/deeplint.git
+cd deeplint
 
 # Create virtual environment
 python3 -m venv .venv
