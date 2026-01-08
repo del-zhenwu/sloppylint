@@ -1,4 +1,4 @@
-"""Command-line interface for Sloppy."""
+"""Command-line interface for DeepLint."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ from sloppy.scoring import calculate_score
 def create_parser() -> argparse.ArgumentParser:
     """Create the argument parser."""
     parser = argparse.ArgumentParser(
-        prog="sloppylint",
+        prog="deeplint",
         description="Multi-language AI Slop Detector - Find over-engineering, hallucinations, and dead code",
     )
 

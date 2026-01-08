@@ -1,8 +1,8 @@
-# Sloppy - Multi-Language AI Slop Detector
+# DeepLint - Multi-Language AI Slop Detector
 
 ## Project Overview
 
-Sloppy detects "AI slop" patterns in Python, Go, JavaScript, and TypeScript code - 
+DeepLint detects "AI slop" patterns in Python, Go, JavaScript, and TypeScript code - 
 over-engineering, hallucinations, dead code, and anti-patterns commonly produced by LLMs. 
 Inspired by KarpeSlop.
 
@@ -14,7 +14,7 @@ Inspired by KarpeSlop.
 ## Project Structure
 
 ```
-sloppy/
+deeplint/
 ├── src/sloppy/
 │   ├── __init__.py          # Package init, version
 │   ├── __main__.py          # Entry point: python -m sloppy
@@ -23,7 +23,7 @@ sloppy/
 │   ├── languages.py         # Language detection and configuration
 │   ├── scoring.py           # Slop index calculation
 │   ├── reporter.py          # Terminal + JSON output
-│   ├── config.py            # pyproject.toml / .sloppyrc support
+│   ├── config.py            # pyproject.toml / [tool.deeplint] support
 │   ├── patterns/
 │   │   ├── __init__.py      # Pattern registry
 │   │   ├── base.py          # BasePattern class
@@ -68,8 +68,8 @@ sloppy/
 ### Setup
 ```bash
 # Clone and setup
-git clone https://github.com/rsionnach/sloppy.git
-cd sloppy
+git clone https://github.com/del-zhenwu/deeplint.git
+cd deeplint
 
 # Create virtual environment
 python3 -m venv .venv
@@ -117,6 +117,11 @@ isort --check-only src/ tests/
 python -m sloppy .
 python -m sloppy src/ --severity high
 python -m sloppy --output report.json
+
+# Or use the CLI command
+deeplint .
+deeplint src/ --severity high
+deeplint --output report.json
 ```
 
 ## Code Style & Conventions
@@ -222,7 +227,7 @@ def test_none_default_not_flagged(fixture_path):
 ## CLI Interface Specification
 
 ```
-usage: sloppy [-h] [--output FILE] [--format {compact,detailed,json}]
+usage: deeplint [-h] [--output FILE] [--format {compact,detailed,json}]
               [--severity {low,medium,high,critical}]
               [--ignore PATTERN] [--disable PATTERN_ID]
               [--language LANG]
@@ -430,8 +435,8 @@ class GoDebugPrint(RegexPattern):
 ### Language Detection
 Language is auto-detected by file extension. Use `--language` to filter:
 ```bash
-sloppylint --language python src/
-sloppylint --language go --language javascript src/
+deeplint --language python src/
+deeplint --language go --language javascript src/
 ```
 
 ## Security Considerations

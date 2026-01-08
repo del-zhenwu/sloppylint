@@ -1,4 +1,4 @@
-"""Configuration file support for Sloppy."""
+"""Configuration file support for DeepLint."""
 
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ else:
 
 @dataclass
 class Config:
-    """Sloppy configuration."""
+    """DeepLint configuration."""
 
     # Patterns to ignore (glob patterns)
     ignore: list[str] = field(default_factory=list)
@@ -142,8 +142,12 @@ def load_config(config_path: Path | None = None) -> Config:
     except Exception:
         return Config()
 
-    # Look for [tool.sloppy] section
-    tool_config = data.get("tool", {}).get("sloppy", {})
+    # Look for [tool.deeplint] section
+    tool_config = data.get("tool", {}).get("deeplint", {})
+    
+    # Fall back to [tool.sloppy] for backward compatibility
+    if not tool_config:
+        tool_config = data.get("tool", {}).get("sloppy", {})
 
     if not tool_config:
         return Config()

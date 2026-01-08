@@ -1,12 +1,12 @@
 <!-- TODO: Add CLI demo GIF here -->
 
 <div align="center">
-  <h1>🐷 Sloppylint</h1>
+  <h1>🧠 DeepLint</h1>
   <p><strong>Detect AI-generated code anti-patterns in your multi-language codebase.</strong></p>
   <p><em>Catches AI-specific anti-patterns that traditional linters miss</em></p>
 </div>
 
-[![PyPI](https://img.shields.io/pypi/v/sloppylint?style=for-the-badge)](https://pypi.org/project/sloppylint/)
+[![PyPI](https://img.shields.io/pypi/v/deeplint?style=for-the-badge)](https://pypi.org/project/deeplint/)
 [![Python 3.9+](https://img.shields.io/badge/Python-3.9+-blue?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
@@ -15,8 +15,8 @@
 ## ⚡ Quick Start
 
 ```bash
-pip install sloppylint
-sloppylint .
+pip install deeplint
+deeplint .
 
 # Output:
 # CRITICAL (2 issues)
@@ -29,7 +29,7 @@ sloppylint .
 #     Bare except catches everything including SystemExit
 #     > except:
 #
-# SLOPPY INDEX
+# DEEPLINT INDEX
 # ══════════════════════════════════════════════════
 # Information Utility (Noise)    : 24 pts
 # Information Quality (Lies)     : 105 pts
@@ -45,7 +45,7 @@ sloppylint .
 
 ## 🌐 Multi-Language Support
 
-Sloppylint automatically detects and scans multiple programming languages in your codebase:
+DeepLint automatically detects and scans multiple programming languages in your codebase:
 
 | Language | File Extensions | Status |
 |----------|----------------|--------|
@@ -56,11 +56,11 @@ Sloppylint automatically detects and scans multiple programming languages in you
 
 ### Automatic Detection
 
-By default, Sloppylint **automatically detects** which languages are present in your project:
+By default, DeepLint **automatically detects** which languages are present in your project:
 
 ```bash
 # Scans all supported languages found in the directory
-sloppylint .
+deeplint .
 
 # Output shows detected languages:
 # Scanned languages: javascript, python, typescript
@@ -72,13 +72,13 @@ Advanced users can override automatic detection with the `--language` flag:
 
 ```bash
 # Scan only Python files
-sloppylint src/ --language python
+deeplint src/ --language python
 
 # Scan multiple specific languages
-sloppylint src/ --language javascript,typescript
+deeplint src/ --language javascript,typescript
 
 # Case-insensitive language names
-sloppylint src/ --language Python,JavaScript
+deeplint src/ --language Python,JavaScript
 ```
 
 This is useful when:
@@ -88,7 +88,7 @@ This is useful when:
 
 ---
 
-## 🤔 Why Sloppylint Exists
+## 🤔 Why DeepLint Exists
 
 Traditional linters catch style and syntax issues. But AI-generated code introduces **new failure patterns** they weren't designed to detect:
 
@@ -97,11 +97,11 @@ Traditional linters catch style and syntax issues. But AI-generated code introdu
 - **Placeholder code** - `pass`, `TODO`, functions that do nothing
 - **Confident wrongness** - code that looks right but fails at runtime
 
-Sloppylint targets these AI-specific patterns that escape Pylint, Flake8, ESLint, and code review.
+DeepLint targets these AI-specific patterns that escape Pylint, Flake8, ESLint, and code review.
 
 ### Frontend-Focused Detection
 
-Building on insights from [KarpeSlop](https://github.com/CodeDeficient/KarpeSlop), Sloppylint includes **30 TypeScript/JavaScript patterns** specifically designed for modern frontend frameworks:
+Building on insights from [KarpeSlop](https://github.com/CodeDeficient/KarpeSlop), DeepLint includes **30 TypeScript/JavaScript patterns** specifically designed for modern frontend frameworks:
 
 - **React Hooks Anti-patterns** - `useEffect` with derived state, empty deps, stale closures
 - **TypeScript Type Safety** - `any` type abuse, unsafe assertions, missing generics  
@@ -127,26 +127,26 @@ Building on insights from [KarpeSlop](https://github.com/CodeDeficient/KarpeSlop
 
 ```bash
 # Automatic language detection - scans all supported languages
-sloppylint .
+deeplint .
 
 # Scan a specific directory
-sloppylint src/
+deeplint src/
 
 # Scan specific files
-sloppylint app.py utils.py
+deeplint app.py utils.py
 
 # Language-specific scanning
-sloppylint src/ --language python              # Python only
-sloppylint src/ --language javascript,typescript  # JS/TS only
+deeplint src/ --language python              # Python only
+deeplint src/ --language javascript,typescript  # JS/TS only
 
 # Only high severity issues
-sloppylint --severity high
+deeplint --severity high
 
 # CI mode - exit 1 if issues found
-sloppylint --ci --max-score 50
+deeplint --ci --max-score 50
 
 # Export JSON report
-sloppylint --output report.json
+deeplint --output report.json
 ```
 
 ---
@@ -259,7 +259,7 @@ setTotal(newTotal);
 
 ### Why This Matters
 
-| Problem | Impact | Sloppylint Catches |
+| Problem | Impact | DeepLint Catches |
 |---------|--------|----------------|
 | Mutable defaults | Shared state bugs | ✅ Critical alert |
 | Bare except | Swallows Ctrl+C | ✅ Critical alert |
@@ -272,8 +272,8 @@ setTotal(newTotal);
 
 ### Research Says
 
-- **20% of AI package imports** reference non-existent libraries — *sloppylint catches these*
-- **LLMs leak patterns** from other languages they were trained on — *sloppylint catches 100+ of these*
+- **20% of AI package imports** reference non-existent libraries — *DeepLint catches these*
+- **LLMs leak patterns** from other languages they were trained on — *DeepLint catches 100+ of these*
 - **66% of developers** say AI code is "almost right" (the dangerous kind)
 
 ---
@@ -281,26 +281,26 @@ setTotal(newTotal);
 ## 🛠️ CLI Commands
 
 ```bash
-sloppylint .                    # 🔍 Scan current directory (auto-detect languages)
-sloppylint src/ tests/          # 📁 Scan multiple directories
+deeplint .                    # 🔍 Scan current directory (auto-detect languages)
+deeplint src/ tests/          # 📁 Scan multiple directories
 
 # Language selection
-sloppylint --language python    # 🐍 Scan Python only
-sloppylint --language js,ts     # 📜 Scan JavaScript & TypeScript
-sloppylint -l go                # 🚀 Scan Go only
+deeplint --language python    # 🐍 Scan Python only
+deeplint --language js,ts     # 📜 Scan JavaScript & TypeScript
+deeplint -l go                # 🚀 Scan Go only
 
 # Severity & reporting
-sloppylint --severity high      # ⚡ Only critical/high issues
-sloppylint --lenient            # 🎯 Same as --severity high
-sloppylint --strict             # 🔬 Report everything
-sloppylint --ci                 # 🚦 Exit 1 if any issues
-sloppylint --max-score 50       # 📊 Exit 1 if score > 50
-sloppylint --output report.json # 📋 Export JSON report
+deeplint --severity high      # ⚡ Only critical/high issues
+deeplint --lenient            # 🎯 Same as --severity high
+deeplint --strict             # 🔬 Report everything
+deeplint --ci                 # 🚦 Exit 1 if any issues
+deeplint --max-score 50       # 📊 Exit 1 if score > 50
+deeplint --output report.json # 📋 Export JSON report
 
 # Filtering
-sloppylint --ignore "tests/*"   # 🚫 Exclude patterns
-sloppylint --disable magic_number # ⏭️ Skip specific checks
-sloppylint --version            # 📌 Show version
+deeplint --ignore "tests/*"   # 🚫 Exclude patterns
+deeplint --disable magic_number # ⏭️ Skip specific checks
+deeplint --version            # 📌 Show version
 ```
 
 ---
@@ -334,9 +334,9 @@ LLMs are trained on code from many languages. When generating code, they sometim
 
 ---
 
-## 🚫 What Sloppylint Is Not
+## 🚫 What DeepLint Is Not
 
-Sloppylint does **not** replace:
+DeepLint does **not** replace:
 - Human code review
 - Traditional linters (Pylint, Flake8, Ruff)
 - Type checkers (mypy, pyright)
@@ -350,17 +350,17 @@ It **complements** them by catching patterns these tools miss—patterns uniquel
 
 ```bash
 # Install from PyPI
-pip install sloppylint
+pip install deeplint
 
 # With colored output (recommended)
-pip install sloppylint[rich]
+pip install deeplint[rich]
 
 # With all optional features
-pip install sloppylint[all]
+pip install deeplint[all]
 
 # Or install from source for development
-git clone https://github.com/rsionnach/sloppylint.git
-cd sloppylint
+git clone https://github.com/del-zhenwu/deeplint.git
+cd deeplint
 pip install -e ".[dev]"
 ```
 
@@ -371,7 +371,7 @@ pip install -e ".[dev]"
 Configure via `pyproject.toml`:
 
 ```toml
-[tool.sloppy]
+[tool.deeplint]
 ignore = ["tests/*", "migrations/*"]
 disable = ["magic_number", "debug_print"]
 severity = "medium"
@@ -385,8 +385,8 @@ format = "detailed"  # or "compact" or "json"
 ## 🤝 Contributing
 
 ```bash
-git clone https://github.com/rsionnach/sloppylint.git
-cd sloppylint
+git clone https://github.com/del-zhenwu/deeplint.git
+cd deeplint
 pip install -e ".[dev]"
 pytest tests/ -v  # 99 tests should pass
 ```

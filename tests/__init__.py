@@ -1,1 +1,1 @@
-"""Sloppy tests."""
+"""DeepLint tests."""

@@ -3,16 +3,16 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "sloppylint"
+name = "deeplint"
 version = "0.5.1"
-description = "Python AI Slop Detector - Find over-engineering, hallucinations, and dead code"
+description = "Multi-language AI Slop Detector - Intelligent detection of AI-generated code anti-patterns"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.9"
 authors = [
     { name = "Rob Fox" }
 ]
-keywords = ["linter", "code-quality", "ai", "static-analysis"]
+keywords = ["linter", "code-quality", "ai", "static-analysis", "deep-learning"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Console",
@@ -49,11 +49,11 @@ all = [
 ]
 
 [project.scripts]
-sloppylint = "sloppy.cli:main"
+deeplint = "sloppy.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/rsionnach/sloppylint"
-Repository = "https://github.com/rsionnach/sloppylint"
+Homepage = "https://github.com/del-zhenwu/deeplint"
+Repository = "https://github.com/del-zhenwu/deeplint"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/sloppy"]
@@ -115,6 +115,6 @@ ignore = [
 [tool.ruff.lint.isort]
 known-first-party = ["sloppy"]
 
-[tool.sloppy]
+[tool.deeplint]
 exclude = ["tests/*", "migrations/*"]
 severity_threshold = "medium"

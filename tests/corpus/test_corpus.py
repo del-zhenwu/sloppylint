@@ -4,7 +4,7 @@ This test suite validates that:
 1. False positive files do NOT trigger unexpected warnings
 2. True positive files DO trigger expected warnings
 
-Note: sloppylint focuses ONLY on AI-specific patterns. Traditional linting
+Note: DeepLint focuses ONLY on AI-specific patterns. Traditional linting
 patterns (debug prints, magic numbers, exception handling) are delegated
 to tools like ruff, flake8, and pylint.
 """
