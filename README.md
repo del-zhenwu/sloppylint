@@ -238,6 +238,8 @@ Architectural and organizational issues:
 | JavaScript | `.js`, `.jsx` | Regex | 30 |
 | TypeScript | `.ts`, `.tsx` | Regex | 30 |
 
+**Language-Specific Pattern Filtering**: DeepLint automatically applies only the relevant patterns to each file based on its language. For example, Go-specific patterns (like `go_python_pattern` which detects Python idioms in Go code) only run on `.go` files and won't create false positives when scanning Python files. This ensures accurate detection across multi-language projects.
+
 ### Python Patterns (46 total)
 
 - **Noise (10)**: redundant_comment, empty_docstring, debug_print, etc.
