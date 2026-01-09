@@ -11,7 +11,7 @@ to tools like ruff, flake8, and pylint.
 
 from pathlib import Path
 
-from sloppy.detector import Detector
+from deeplint.detector import Detector
 
 CORPUS_DIR = Path(__file__).parent
 

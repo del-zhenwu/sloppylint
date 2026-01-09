@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from sloppy.config import Config, find_config_file, get_default_ignores, load_config
+from deeplint.config import Config, find_config_file, get_default_ignores, load_config
 
 
 def test_config_defaults():
@@ -41,7 +41,7 @@ def test_load_config_from_pyproject(tmp_path):
     pyproject = tmp_path / "pyproject.toml"
     pyproject.write_text(
         """
-[tool.sloppy]
+[tool.deeplint]
 ignore = ["venv/*", ".git/*"]
 disable = ["debug_print"]
 severity = "high"
@@ -58,7 +58,7 @@ max-score = 100
 
 
 def test_load_config_missing_section(tmp_path):
-    """Test loading config when [tool.sloppy] section is missing."""
+    """Test loading config when [tool.deeplint] section is missing."""
     pyproject = tmp_path / "pyproject.toml"
     pyproject.write_text(
         """
@@ -91,7 +91,7 @@ def test_find_config_file(tmp_path):
 
     # Create pyproject.toml in root
     pyproject = tmp_path / "pyproject.toml"
-    pyproject.write_text("[tool.sloppy]\n")
+    pyproject.write_text("[tool.deeplint]\n")
 
     # Should find it from subdir
     found = find_config_file(subdir)

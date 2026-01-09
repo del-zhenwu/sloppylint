@@ -49,14 +49,14 @@ all = [
 ]
 
 [project.scripts]
-deeplint = "sloppy.cli:main"
+deeplint = "deeplint.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/del-zhenwu/deeplint"
 Repository = "https://github.com/del-zhenwu/deeplint"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/sloppy"]
+packages = ["src/deeplint"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -80,11 +80,11 @@ warn_unused_ignores = true
 disable_error_code = ["assignment", "attr-defined"]
 
 [[tool.mypy.overrides]]
-module = "sloppy.analyzers.*"
+module = "deeplint.analyzers.*"
 disable_error_code = ["assignment", "attr-defined", "return-value"]
 
 [[tool.mypy.overrides]]
-module = "sloppy.patterns.*"
+module = "deeplint.patterns.*"
 disable_error_code = ["assignment"]
 
 [tool.ruff]
@@ -113,7 +113,7 @@ ignore = [
 "tests/corpus/**" = ["F821", "F401", "F811", "E999", "W293", "I001"]  # Test corpus has intentionally bad code
 
 [tool.ruff.lint.isort]
-known-first-party = ["sloppy"]
+known-first-party = ["deeplint"]
 
 [tool.deeplint]
 exclude = ["tests/*", "migrations/*"]

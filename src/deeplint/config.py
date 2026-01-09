@@ -144,10 +144,10 @@ def load_config(config_path: Path | None = None) -> Config:
 
     # Look for [tool.deeplint] section
     tool_config = data.get("tool", {}).get("deeplint", {})
-    
-    # Fall back to [tool.sloppy] for backward compatibility
+
+    # Fall back to [tool.deeplint] for backward compatibility
     if not tool_config:
-        tool_config = data.get("tool", {}).get("sloppy", {})
+        tool_config = data.get("tool", {}).get("deeplint", {})
 
     if not tool_config:
         return Config()

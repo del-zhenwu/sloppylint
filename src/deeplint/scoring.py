@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from sloppy.patterns.base import Issue
+    from deeplint.patterns.base import Issue
 
 
 @dataclass

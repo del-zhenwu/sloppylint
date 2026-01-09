@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from sloppy.detector import Detector
+from deeplint.detector import Detector
 
 FIXTURES_DIR = Path(__file__).parent / "fixtures" / "go"
 

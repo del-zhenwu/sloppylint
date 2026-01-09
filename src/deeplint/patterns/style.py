@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 
-from sloppy.patterns.base import RegexPattern, Severity
+from deeplint.patterns.base import RegexPattern, Severity
 
 
 class OverconfidentComment(RegexPattern):

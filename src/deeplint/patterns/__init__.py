@@ -1,9 +1,9 @@
 """Pattern registry."""
 
-from sloppy.patterns.base import BasePattern
-from sloppy.patterns.go import GO_NOISE_PATTERNS, GO_STYLE_PATTERNS
-from sloppy.patterns.hallucinations import HALLUCINATION_PATTERNS
-from sloppy.patterns.js import (
+from deeplint.patterns.base import BasePattern
+from deeplint.patterns.go import GO_NOISE_PATTERNS, GO_STYLE_PATTERNS
+from deeplint.patterns.hallucinations import HALLUCINATION_PATTERNS
+from deeplint.patterns.js import (
     JS_HALLUCINATION_PATTERNS,
     JS_NOISE_PATTERNS,
     JS_REACT_PATTERNS,
@@ -11,9 +11,9 @@ from sloppy.patterns.js import (
     JS_STYLE_PATTERNS,
     JS_TYPESCRIPT_PATTERNS,
 )
-from sloppy.patterns.noise import NOISE_PATTERNS
-from sloppy.patterns.structure import STRUCTURE_PATTERNS
-from sloppy.patterns.style import STYLE_PATTERNS
+from deeplint.patterns.noise import NOISE_PATTERNS
+from deeplint.patterns.structure import STRUCTURE_PATTERNS
+from deeplint.patterns.style import STYLE_PATTERNS
 
 
 def get_all_patterns() -> list[BasePattern]:

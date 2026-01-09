@@ -15,9 +15,9 @@ Inspired by KarpeSlop.
 
 ```
 deeplint/
-├── src/sloppy/
+├── src/deeplint/
 │   ├── __init__.py          # Package init, version
-│   ├── __main__.py          # Entry point: python -m sloppy
+│   ├── __main__.py          # Entry point: python -m deeplint
 │   ├── cli.py               # Argument parsing (argparse)
 │   ├── detector.py          # Main orchestration
 │   ├── languages.py         # Language detection and configuration
@@ -101,22 +101,22 @@ Dev dependencies:
 pytest tests/ -v
 
 # Run with coverage
-pytest tests/ --cov=src/sloppy --cov-report=term-missing
+pytest tests/ --cov=src/deeplint --cov-report=term-missing
 
 # Run specific test file
 pytest tests/test_patterns/test_hallucinations.py -v
 
 # Type checking (if mypy added)
-mypy src/sloppy
+mypy src/deeplint
 
 # Format check
 black --check src/ tests/
 isort --check-only src/ tests/
 
 # Run the tool locally
-python -m sloppy .
-python -m sloppy src/ --severity high
-python -m sloppy --output report.json
+python -m deeplint .
+python -m deeplint src/ --severity high
+python -m deeplint --output report.json
 
 # Or use the CLI command
 deeplint .
@@ -137,7 +137,7 @@ deeplint --output report.json
 All detection patterns inherit from `BasePattern`:
 
 ```python
-from sloppy.patterns.base import BasePattern, Issue, Severity
+from deeplint.patterns.base import BasePattern, Issue, Severity
 
 class MutableDefaultArg(BasePattern):
     """Detect mutable default arguments."""
@@ -448,7 +448,7 @@ deeplint --language go --language javascript src/
 
 ## PR Guidelines
 
-- All PRs must pass tests and have no new issues from sloppy itself
+- All PRs must pass tests and have no new issues from deeplint itself
 - Add tests for new patterns
 - Update AGENTS.md if adding new conventions
 - Keep commits atomic and well-described

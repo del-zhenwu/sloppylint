@@ -7,11 +7,11 @@ import fnmatch
 import re
 from pathlib import Path
 
-from sloppy.analyzers.ast_analyzer import ASTAnalyzer
-from sloppy.language_detector import get_extensions_for_languages
-from sloppy.patterns import get_all_patterns
-from sloppy.patterns.base import Issue
-from sloppy.patterns.helpers import get_multiline_string_lines
+from deeplint.analyzers.ast_analyzer import ASTAnalyzer
+from deeplint.language_detector import get_extensions_for_languages
+from deeplint.patterns import get_all_patterns
+from deeplint.patterns.base import Issue
+from deeplint.patterns.helpers import get_multiline_string_lines
 
 SEVERITY_ORDER = {
     "low": 0,
@@ -40,7 +40,7 @@ class Detector:
         self.min_severity_level = SEVERITY_ORDER.get(min_severity, 0)
         self.root_path = root_path or Path.cwd()
         self.languages = languages or ["python"]  # Default to Python for backwards compatibility
-        
+
         # Get all file extensions for the specified languages
         self.file_extensions = get_extensions_for_languages(self.languages)
 

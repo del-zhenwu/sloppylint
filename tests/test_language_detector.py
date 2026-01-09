@@ -2,9 +2,7 @@
 
 from pathlib import Path
 
-import pytest
-
-from sloppy.language_detector import (
+from deeplint.language_detector import (
     detect_languages,
     get_extensions_for_language,
     get_extensions_for_languages,

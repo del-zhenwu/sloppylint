@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from sloppy.detector import Detector
+from deeplint.detector import Detector
 
 FIXTURES_DIR = Path(__file__).parent / "fixtures" / "js"
 
@@ -36,9 +36,13 @@ class TestHallucinatedImports:
 
         hallucinated_react = [i for i in issues if i.pattern_id == "js_hallucinated_react_import"]
         hallucinated_next = [i for i in issues if i.pattern_id == "js_hallucinated_next_import"]
-        
-        assert len(hallucinated_react) == 0, f"Clean imports should not trigger hallucinated_react_import"
-        assert len(hallucinated_next) == 0, f"Clean imports should not trigger hallucinated_next_import"
+
+        assert (
+            len(hallucinated_react) == 0
+        ), "Clean imports should not trigger hallucinated_react_import"
+        assert (
+            len(hallucinated_next) == 0
+        ), "Clean imports should not trigger hallucinated_next_import"
 
 
 class TestTypeScriptPatterns:
@@ -69,7 +73,9 @@ class TestTypeScriptPatterns:
         issues = detector.scan([file])
 
         unsafe_assertions = [i for i in issues if i.pattern_id == "ts_unsafe_type_assertion"]
-        assert len(unsafe_assertions) >= 1, f"Expected unsafe type assertions, got: {unsafe_assertions}"
+        assert (
+            len(unsafe_assertions) >= 1
+        ), f"Expected unsafe type assertions, got: {unsafe_assertions}"
 
     def test_clean_typing_not_flagged(self) -> None:
         """Clean TypeScript code with proper types should not be flagged."""
@@ -78,7 +84,9 @@ class TestTypeScriptPatterns:
         issues = detector.scan([file])
 
         any_issues = [i for i in issues if "ts_any" in i.pattern_id or "ts_unsafe" in i.pattern_id]
-        assert len(any_issues) == 0, f"Clean typing should not trigger any TS issues, got: {any_issues}"
+        assert (
+            len(any_issues) == 0
+        ), f"Clean typing should not trigger any TS issues, got: {any_issues}"
 
 
 class TestReactPatterns:
@@ -118,7 +126,9 @@ class TestReactPatterns:
         issues = detector.scan([file])
 
         callback_issues = [i for i in issues if i.pattern_id == "js_useCallback_no_deps"]
-        assert len(callback_issues) >= 1, f"Expected useCallback no deps issues, got: {callback_issues}"
+        assert (
+            len(callback_issues) >= 1
+        ), f"Expected useCallback no deps issues, got: {callback_issues}"
 
     def test_clean_react_patterns_not_flagged(self) -> None:
         """Clean React patterns should not be flagged."""
@@ -126,8 +136,16 @@ class TestReactPatterns:
         detector = Detector(languages=["typescript"])
         issues = detector.scan([file])
 
-        react_issues = [i for i in issues if "useEffect" in i.pattern_id or "useCallback" in i.pattern_id or "setState" in i.pattern_id]
-        assert len(react_issues) == 0, f"Clean React patterns should not trigger issues, got: {react_issues}"
+        react_issues = [
+            i
+            for i in issues
+            if "useEffect" in i.pattern_id
+            or "useCallback" in i.pattern_id
+            or "setState" in i.pattern_id
+        ]
+        assert (
+            len(react_issues) == 0
+        ), f"Clean React patterns should not trigger issues, got: {react_issues}"
 
 
 class TestStylePatterns:
@@ -171,7 +189,9 @@ class TestQualityPatterns:
         issues = detector.scan([file])
 
         todo_issues = [i for i in issues if i.pattern_id == "js_todo_implementation_placeholder"]
-        assert len(todo_issues) >= 1, f"Expected TODO implementation placeholders, got: {todo_issues}"
+        assert (
+            len(todo_issues) >= 1
+        ), f"Expected TODO implementation placeholders, got: {todo_issues}"
 
     def test_assumption_comment_detected(self) -> None:
         """Assumption comments should be detected."""
@@ -180,7 +200,9 @@ class TestQualityPatterns:
         issues = detector.scan([file])
 
         assumption_issues = [i for i in issues if i.pattern_id == "js_assumption_comment"]
-        assert len(assumption_issues) >= 1, f"Expected assumption comments, got: {assumption_issues}"
+        assert (
+            len(assumption_issues) >= 1
+        ), f"Expected assumption comments, got: {assumption_issues}"
 
     def test_missing_error_handling_detected(self) -> None:
         """Missing error handling should be detected."""
@@ -189,7 +211,9 @@ class TestQualityPatterns:
         issues = detector.scan([file])
 
         error_handling = [i for i in issues if i.pattern_id == "js_missing_error_handling"]
-        assert len(error_handling) >= 1, f"Expected missing error handling issues, got: {error_handling}"
+        assert (
+            len(error_handling) >= 1
+        ), f"Expected missing error handling issues, got: {error_handling}"
 
 
 class TestNoisePatterns:
@@ -235,9 +259,13 @@ class TestIntegration:
         # Should detect multiple categories
         critical_issues = [i for i in issues if i.severity.value == "critical"]
         high_issues = [i for i in issues if i.severity.value == "high"]
-        
-        assert len(critical_issues) >= 2, f"Expected at least 2 critical issues, got {len(critical_issues)}"
-        assert len(high_issues) >= 5, f"Expected at least 5 high severity issues, got {len(high_issues)}"
+
+        assert (
+            len(critical_issues) >= 2
+        ), f"Expected at least 2 critical issues, got {len(critical_issues)}"
+        assert (
+            len(high_issues) >= 5
+        ), f"Expected at least 5 high severity issues, got {len(high_issues)}"
         assert len(issues) >= 15, f"Expected at least 15 total issues, got {len(issues)}"
 
     def test_clean_react_minimal_issues(self) -> None:
@@ -249,6 +277,10 @@ class TestIntegration:
         # Clean code should have no critical or high severity issues
         critical_issues = [i for i in issues if i.severity.value == "critical"]
         high_issues = [i for i in issues if i.severity.value == "high"]
-        
-        assert len(critical_issues) == 0, f"Clean code should have no critical issues, got: {critical_issues}"
-        assert len(high_issues) == 0, f"Clean code should have no high severity issues, got: {high_issues}"
+
+        assert (
+            len(critical_issues) == 0
+        ), f"Clean code should have no critical issues, got: {critical_issues}"
+        assert (
+            len(high_issues) == 0
+        ), f"Clean code should have no high severity issues, got: {high_issues}"

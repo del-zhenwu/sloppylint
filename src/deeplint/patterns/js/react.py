@@ -2,7 +2,7 @@
 
 import re
 
-from sloppy.patterns.base import RegexPattern, Severity
+from deeplint.patterns.base import RegexPattern, Severity
 
 
 class JSUseEffectDerivedState(RegexPattern):
@@ -11,7 +11,9 @@ class JSUseEffectDerivedState(RegexPattern):
     id = "js_useEffect_derived_state"
     severity = Severity.HIGH
     axis = "structure"
-    message = "useEffect setting state from props/other state - consider useMemo or compute in render"
+    message = (
+        "useEffect setting state from props/other state - consider useMemo or compute in render"
+    )
     # Match when we see setX( pattern inside useEffect - simplified for line-by-line matching
     pattern = re.compile(
         r"useEffect.*set[A-Z]\w*\(",

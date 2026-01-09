@@ -2,7 +2,7 @@
 
 import re
 
-from sloppy.patterns.base import RegexPattern, Severity
+from deeplint.patterns.base import RegexPattern, Severity
 
 
 class GoOverconfidentComment(RegexPattern):
@@ -40,7 +40,7 @@ class GoPythonPatterns(RegexPattern):
     message = "Python pattern in Go code - use Go idioms"
     # Only detecting Python-specific method patterns that are invalid in Go
     pattern = re.compile(
-        r'(\.append\(|\.split\(|\.join\()',
+        r"(\.append\(|\.split\(|\.join\()",
         re.IGNORECASE,
     )
 

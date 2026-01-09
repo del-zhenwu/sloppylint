@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from sloppy.patterns.base import BasePattern, Issue
+    from deeplint.patterns.base import BasePattern, Issue
 
 
 class ASTAnalyzer(ast.NodeVisitor):
@@ -106,7 +106,7 @@ class ASTAnalyzer(ast.NodeVisitor):
 
         # Check for deep nesting
         if self.nesting_depth > 4:
-            from sloppy.patterns.base import Issue, Severity
+            from deeplint.patterns.base import Issue, Severity
 
             self.issues.append(
                 Issue(

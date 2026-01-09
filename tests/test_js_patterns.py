@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from sloppy.detector import Detector
+from deeplint.detector import Detector
 
 FIXTURES_DIR = Path(__file__).parent / "fixtures" / "js"
 
@@ -106,12 +106,13 @@ class TestJavaScriptLanguageFilter:
 
         # Should only find issues in JS files
         js_files = [i.file for i in issues if i.file.suffix in (".js", ".jsx")]
-        non_js_files = [i.file for i in issues if i.file.suffix not in (".js", ".jsx", ".ts", ".tsx")]
 
         assert len(js_files) > 0, "Should find JavaScript files"
         # Non-JS files should not include TS files in JS-only filter
         ts_files = [i.file for i in issues if i.file.suffix in (".ts", ".tsx")]
-        assert len(ts_files) == 0, f"Should not scan TypeScript files with JS filter, found: {ts_files}"
+        assert (
+            len(ts_files) == 0
+        ), f"Should not scan TypeScript files with JS filter, found: {ts_files}"
 
     def test_ts_language_filter(self) -> None:
         """When filtering for TypeScript, only TS files should be scanned."""
@@ -120,5 +121,5 @@ class TestJavaScriptLanguageFilter:
 
         # Should only find issues in TS files
         ts_files = [i.file for i in issues if i.file.suffix in (".ts", ".tsx")]
-        
+
         assert len(ts_files) > 0, "Should find TypeScript files"

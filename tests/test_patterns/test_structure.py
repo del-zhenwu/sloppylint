@@ -1,6 +1,6 @@
 """Tests for structural pattern detection - AI-specific patterns."""
 
-from sloppy.detector import Detector
+from deeplint.detector import Detector
 
 
 def test_single_method_class_detected(tmp_python_file):

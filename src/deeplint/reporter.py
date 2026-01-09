@@ -17,8 +17,8 @@ except ImportError:
     RICH_AVAILABLE = False
 
 if TYPE_CHECKING:
-    from sloppy.patterns.base import Issue
-    from sloppy.scoring import SlopScore
+    from deeplint.patterns.base import Issue
+    from deeplint.scoring import SlopScore
 
 
 # Severity colors for rich output
@@ -155,9 +155,7 @@ class TerminalReporter(Reporter):
         verdict_color = (
             "green"
             if score.verdict == "CLEAN"
-            else "yellow"
-            if score.verdict == "ACCEPTABLE"
-            else "red"
+            else "yellow" if score.verdict == "ACCEPTABLE" else "red"
         )
         console.print()
         console.print(f"Verdict: [{verdict_color} bold]{score.verdict}[/{verdict_color} bold]")
@@ -271,7 +269,7 @@ class JSONReporter(Reporter):
             "verdict": score.verdict,
             **({"languages": sorted(languages)} if languages else {}),
         }
-        
+
         return {
             "summary": summary,
             "issues": [

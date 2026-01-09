@@ -2,7 +2,7 @@
 
 import re
 
-from sloppy.patterns.base import RegexPattern, Severity
+from deeplint.patterns.base import RegexPattern, Severity
 
 
 class JSOverconfidentComment(RegexPattern):
@@ -40,7 +40,7 @@ class JSPythonPatterns(RegexPattern):
     message = "Python pattern in JS/TS code - use JavaScript idioms"
     # Only detecting patterns that are clearly Python-specific and invalid in JS
     pattern = re.compile(
-        r'(\.append\()',
+        r"(\.append\()",
         re.IGNORECASE,
     )
 
@@ -52,7 +52,7 @@ class JSVarKeyword(RegexPattern):
     severity = Severity.MEDIUM
     axis = "style"
     message = "Use 'const' or 'let' instead of 'var'"
-    pattern = re.compile(r'\bvar\s+\w+\s*=')
+    pattern = re.compile(r"\bvar\s+\w+\s*=")
 
 
 class JSUnnecessaryIIFE(RegexPattern):

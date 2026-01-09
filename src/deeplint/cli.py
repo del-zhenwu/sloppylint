@@ -6,12 +6,12 @@ import argparse
 import sys
 from pathlib import Path
 
-from sloppy import __version__
-from sloppy.config import get_default_ignores, load_config
-from sloppy.detector import Detector
-from sloppy.language_detector import detect_languages, get_supported_languages, parse_language_arg
-from sloppy.reporter import JSONReporter, TerminalReporter
-from sloppy.scoring import calculate_score
+from deeplint import __version__
+from deeplint.config import get_default_ignores, load_config
+from deeplint.detector import Detector
+from deeplint.language_detector import detect_languages, get_supported_languages, parse_language_arg
+from deeplint.reporter import JSONReporter, TerminalReporter
+from deeplint.scoring import calculate_score
 
 
 def create_parser() -> argparse.ArgumentParser:

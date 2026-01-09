@@ -6,7 +6,7 @@ import ast
 import re
 from pathlib import Path
 
-from sloppy.patterns.base import ASTPattern, Issue, RegexPattern, Severity
+from deeplint.patterns.base import ASTPattern, Issue, RegexPattern, Severity
 
 
 class TodoPlaceholder(RegexPattern):
@@ -363,7 +363,7 @@ class HallucinatedImport(ASTPattern):
         if node.module is None:
             return []
 
-        from sloppy.analyzers.import_validator import check_known_hallucination
+        from deeplint.analyzers.import_validator import check_known_hallucination
 
         issues = []
         for alias in node.names:
@@ -397,7 +397,7 @@ class WrongStdlibImport(ASTPattern):
         file: Path,
         source_lines: list[str],
     ) -> list[Issue]:
-        from sloppy.analyzers.import_validator import is_likely_hallucinated_package
+        from deeplint.analyzers.import_validator import is_likely_hallucinated_package
 
         issues = []
 
@@ -456,7 +456,7 @@ class HallucinatedMethod(ASTPattern):
 
         method_name = node.func.attr
 
-        from sloppy.analyzers.import_validator import check_hallucinated_method
+        from deeplint.analyzers.import_validator import check_hallucinated_method
 
         error_msg = check_hallucinated_method(method_name)
         if error_msg:

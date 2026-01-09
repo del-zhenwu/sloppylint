@@ -1,6 +1,6 @@
 """Tests for hallucination detection patterns."""
 
-from sloppy.detector import Detector
+from deeplint.detector import Detector
 
 
 def test_pass_placeholder_detected(tmp_python_file):

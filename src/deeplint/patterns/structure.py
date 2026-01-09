@@ -5,7 +5,7 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
-from sloppy.patterns.base import ASTPattern, Issue, Severity
+from deeplint.patterns.base import ASTPattern, Issue, Severity
 
 
 class SingleMethodClass(ASTPattern):
