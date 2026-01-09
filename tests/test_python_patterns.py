@@ -7,8 +7,6 @@ This test suite ensures all major Python pattern categories are tested:
 - Structure patterns (god classes, dead code)
 """
 
-from pathlib import Path
-
 from sloppy.detector import Detector
 
 
@@ -165,9 +163,9 @@ def hello():
         detector = Detector(languages=["python"])
         issues = detector.scan([file])
 
-        unused = [i for i in issues if i.pattern_id == "unused_import"]
-        # Note: This requires more complex AST analysis, so we don't assert
-        # Just verify the detector runs without errors
+        # Note: unused_import pattern requires complex AST analysis
+        # This test just verifies the detector runs without errors
+        _ = [i for i in issues if i.pattern_id == "unused_import"]
 
 
 class TestPythonPlaceholders:
@@ -221,10 +219,10 @@ class TestPythonLanguageFilter:
         # Create test files in different languages
         py_file = tmp_path / "test.py"
         py_file.write_text("def test(): pass")
-        
+
         js_file = tmp_path / "test.js"
         js_file.write_text("function test() {}")
-        
+
         go_file = tmp_path / "test.go"
         go_file.write_text("func test() {}")
 
@@ -236,7 +234,9 @@ class TestPythonLanguageFilter:
         non_python_files = [i.file for i in issues if i.file.suffix != ".py"]
 
         assert len(python_files) > 0, "Should find Python files"
-        assert len(non_python_files) == 0, f"Should not scan non-Python files, found: {non_python_files}"
+        assert (
+            len(non_python_files) == 0
+        ), f"Should not scan non-Python files, found: {non_python_files}"
 
 
 class TestPythonIntegration:
@@ -261,7 +261,7 @@ def placeholder():
 
         # Should detect multiple different pattern types
         pattern_ids = {i.pattern_id for i in issues}
-        
+
         # Expect at least a few different pattern types
         assert len(pattern_ids) >= 3, f"Expected multiple pattern types, got: {pattern_ids}"
         assert len(issues) >= 3, f"Expected multiple issues, got {len(issues)}"
@@ -292,5 +292,9 @@ def process_user(user: User) -> bool:
         critical_issues = [i for i in issues if i.severity.value == "critical"]
         high_issues = [i for i in issues if i.severity.value == "high"]
 
-        assert len(critical_issues) == 0, f"Clean code should have no critical issues, got: {critical_issues}"
-        assert len(high_issues) == 0, f"Clean code should have no high severity issues, got: {high_issues}"
+        assert (
+            len(critical_issues) == 0
+        ), f"Clean code should have no critical issues, got: {critical_issues}"
+        assert (
+            len(high_issues) == 0
+        ), f"Clean code should have no high severity issues, got: {high_issues}"

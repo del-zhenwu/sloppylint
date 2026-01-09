@@ -9,6 +9,8 @@
 [![PyPI](https://img.shields.io/pypi/v/deeplint?style=for-the-badge)](https://pypi.org/project/deeplint/)
 [![Python 3.9+](https://img.shields.io/badge/Python-3.9+-blue?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/del-zhenwu/deeplint/ci.yml?branch=main&style=for-the-badge&label=CI)](https://github.com/del-zhenwu/deeplint/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/Tests-114%20passing-brightgreen?style=for-the-badge)](https://github.com/del-zhenwu/deeplint/actions/workflows/ci.yml)
 
 ---
 
