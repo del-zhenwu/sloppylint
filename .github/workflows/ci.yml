@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12"]
 
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +28,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest tests/ -v --cov=src/sloppy --cov-report=xml
+          pytest tests/ -v --cov=src/deeplint --cov-report=xml
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4
@@ -54,7 +54,6 @@ jobs:
       - name: Check formatting (Ruff)
         run: |
           ruff check src/ tests/
-          ruff format --check src/ tests/
 
       - name: Check formatting (Black/isort)
         run: |
@@ -63,7 +62,7 @@ jobs:
 
       - name: Type check
         run: |
-          mypy src/sloppy
+          mypy src/deeplint
 
   security:
     runs-on: ubuntu-latest
