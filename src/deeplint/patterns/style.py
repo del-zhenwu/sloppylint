@@ -14,8 +14,10 @@ class OverconfidentComment(RegexPattern):
     severity = Severity.MEDIUM
     axis = "style"
     message = "Overconfident comment - verify claim before shipping"
+    # Removed "just" and "simply" - too common in natural language
+    # Removed "basically" - commonly used legitimately
     pattern = re.compile(
-        r"#\s*(obviously|clearly|simply|just|easy|trivial|basically|of course|naturally)\b",
+        r"#\s*(obviously|clearly|trivial|of course)\b",
         re.IGNORECASE,
     )
 
@@ -27,8 +29,9 @@ class HedgingComment(RegexPattern):
     severity = Severity.HIGH
     axis = "style"
     message = "Hedging comment suggests uncertainty - verify code works"
+    # Removed "probably", "seems to", "appears to" - can be legitimate in context
     pattern = re.compile(
-        r"#\s*(should work|hopefully|probably|might work|try this|i think|seems to|appears to)\b",
+        r"#\s*(should work|hopefully|might work|try this|i think)\b",
         re.IGNORECASE,
     )
 
@@ -40,8 +43,9 @@ class ApologeticComment(RegexPattern):
     severity = Severity.MEDIUM
     axis = "style"
     message = "Apologetic comment - fix the issue instead of apologizing"
+    # Removed "hack" - legitimate code convention for documenting workarounds
     pattern = re.compile(
-        r"#\s*(sorry|hack|hacky|ugly|bad|terrible|awful|gross|yuck|forgive)\b", re.IGNORECASE
+        r"#\s*(sorry|hacky|ugly|bad|terrible|awful|gross|yuck|forgive)\b", re.IGNORECASE
     )
 
 

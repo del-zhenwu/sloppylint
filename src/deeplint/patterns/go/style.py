@@ -13,8 +13,9 @@ class GoOverconfidentComment(RegexPattern):
     axis = "style"
     message = "Overconfident comment - code should speak for itself"
     supported_languages = ["go"]
+    # Removed "just", "simply", "easy" - too common in natural language
     pattern = re.compile(
-        r"//\s*(obviously|clearly|simply|just|easy|trivial|of course)\b",
+        r"//\s*(obviously|clearly|trivial|of course)\b",
         re.IGNORECASE,
     )
 
@@ -27,8 +28,9 @@ class GoHedgingComment(RegexPattern):
     axis = "style"
     message = "Hedging comment indicates AI uncertainty - verify implementation"
     supported_languages = ["go"]
+    # Removed "probably", "might" - can be legitimate in context
     pattern = re.compile(
-        r"//\s*(should work|hopefully|probably|might|try this|i think)\b",
+        r"//\s*(should work|hopefully|try this|i think)\b",
         re.IGNORECASE,
     )
 
