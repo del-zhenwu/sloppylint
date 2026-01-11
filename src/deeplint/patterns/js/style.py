@@ -12,8 +12,10 @@ class JSOverconfidentComment(RegexPattern):
     severity = Severity.MEDIUM
     axis = "style"
     message = "Overconfident comment - code should speak for itself"
+    supported_languages = ["javascript", "typescript"]
+    # Removed "just", "simply", "easy" - too common in natural language
     pattern = re.compile(
-        r"//\s*(obviously|clearly|simply|just|easy|trivial|of course)\b",
+        r"//\s*(obviously|clearly|trivial|of course)\b",
         re.IGNORECASE,
     )
 
@@ -25,22 +27,10 @@ class JSHedgingComment(RegexPattern):
     severity = Severity.HIGH
     axis = "style"
     message = "Hedging comment indicates AI uncertainty - verify implementation"
+    supported_languages = ["javascript", "typescript"]
+    # Removed "probably", "might" - can be legitimate in context
     pattern = re.compile(
-        r"//\s*(should work|hopefully|probably|might|try this|i think)\b",
-        re.IGNORECASE,
-    )
-
-
-class JSPythonPatterns(RegexPattern):
-    """Detect Python patterns leaked into JS/TS code."""
-
-    id = "js_python_pattern"
-    severity = Severity.HIGH
-    axis = "style"
-    message = "Python pattern in JS/TS code - use JavaScript idioms"
-    # Only detecting patterns that are clearly Python-specific and invalid in JS
-    pattern = re.compile(
-        r"(\.append\()",
+        r"//\s*(should work|hopefully|try this|i think)\b",
         re.IGNORECASE,
     )
 
@@ -52,6 +42,7 @@ class JSVarKeyword(RegexPattern):
     severity = Severity.MEDIUM
     axis = "style"
     message = "Use 'const' or 'let' instead of 'var'"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(r"\bvar\s+\w+\s*=")
 
 
@@ -62,6 +53,7 @@ class JSUnnecessaryIIFE(RegexPattern):
     severity = Severity.MEDIUM
     axis = "style"
     message = "Unnecessary IIFE wrapper - AI over-engineering a simple async call"
+    supported_languages = ["javascript", "typescript"]
     # Simplified pattern to match const x = (async () =>
     pattern = re.compile(
         r"const\s+\w+\s*=\s*\(\s*async\s*\(\)",
@@ -75,6 +67,7 @@ class JSNestedTernaryAbuse(RegexPattern):
     severity = Severity.MEDIUM
     axis = "style"
     message = "Nested ternary hell - extract to switch statement or lookup object"
+    supported_languages = ["javascript", "typescript"]
     # Simplified to detect multiple ? : on same line
     pattern = re.compile(
         r"\?[^:?]+:[^:?]+\?[^:?]+:",
@@ -88,6 +81,7 @@ class JSMagicCSSValue(RegexPattern):
     severity = Severity.LOW
     axis = "style"
     message = "Magic CSS value - extract to design token or const"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(
         r"\b(\d{3,4}px|#\w{6}|rgba?\([^)]+\)|hsl\(\d+)",
     )
@@ -96,7 +90,6 @@ class JSMagicCSSValue(RegexPattern):
 JS_STYLE_PATTERNS = [
     JSOverconfidentComment(),
     JSHedgingComment(),
-    JSPythonPatterns(),
     JSVarKeyword(),
     JSUnnecessaryIIFE(),
     JSNestedTernaryAbuse(),

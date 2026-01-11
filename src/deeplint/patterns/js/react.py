@@ -27,6 +27,7 @@ class JSUseEffectEmptyDeps(RegexPattern):
     severity = Severity.MEDIUM
     axis = "structure"
     message = "useEffect with empty deps - verify this truly should only run on mount"
+    supported_languages = ["javascript", "typescript"]
     # Match useEffect followed by }, []); on same or nearby lines
     pattern = re.compile(
         r"useEffect.*\[\s*\]\s*\)",
@@ -40,6 +41,7 @@ class JSSetStateInLoop(RegexPattern):
     severity = Severity.HIGH
     axis = "structure"
     message = "setState inside a loop - may cause multiple re-renders"
+    supported_languages = ["javascript", "typescript"]
     # Match for loop with setState call
     pattern = re.compile(
         r"for\s*\([^)]+\)[^{]*\{[^}]*set[A-Z]\w*\(",
@@ -53,6 +55,7 @@ class JSUseCallbackNoDeps(RegexPattern):
     severity = Severity.MEDIUM
     axis = "structure"
     message = "useCallback with empty deps - the callback never updates and may use stale values"
+    supported_languages = ["javascript", "typescript"]
     # Match useCallback with }, []);
     pattern = re.compile(
         r"useCallback.*\[\s*\]\s*\)",

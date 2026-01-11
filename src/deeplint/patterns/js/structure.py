@@ -12,6 +12,7 @@ class JSMissingErrorHandling(RegexPattern):
     severity = Severity.MEDIUM
     axis = "structure"
     message = "Potential missing error handling for promise - consider adding try/catch or .catch()"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(
         r"(fetch|axios|http)\s*\(",
     )

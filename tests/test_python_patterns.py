@@ -121,7 +121,7 @@ def calculate():
         code = """
 def maybe_works():
     # This should work hopefully
-    # Probably correct
+    # I think this is correct
     return True
 """
         file = tmp_python_file(code)

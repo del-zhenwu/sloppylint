@@ -12,6 +12,7 @@ class JSDebugConsole(RegexPattern):
     severity = Severity.MEDIUM
     axis = "noise"
     message = "Debug console statement - remove before production"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(
         r'\bconsole\.(log|debug|info|warn|error)\s*\([^)]*["\']?(debug|DEBUG|test|TEST|temp|TEMP)\b'
     )
@@ -24,6 +25,7 @@ class JSTodoComment(RegexPattern):
     severity = Severity.LOW
     axis = "noise"
     message = "TODO comment - track in issue tracker instead"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(r"//\s*(TODO|FIXME|XXX|HACK)\s*:", re.IGNORECASE)
 
 
@@ -34,6 +36,7 @@ class JSRedundantComment(RegexPattern):
     severity = Severity.MEDIUM
     axis = "noise"
     message = "Redundant comment restating obvious code"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(
         r"//\s*(increment|decrement|set|assign|return|get|initialize|init|create)\s+\w+\s*$",
         re.IGNORECASE,
@@ -47,6 +50,7 @@ class JSCommentedCode(RegexPattern):
     severity = Severity.MEDIUM
     axis = "noise"
     message = "Commented-out code - remove or use version control"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(
         r"//\s*(const|let|var|function|if\s*\(|for\s*\(|while\s*\(|return\s+)",
         re.IGNORECASE,
@@ -60,6 +64,7 @@ class JSRedundantSelfExplanatoryComment(RegexPattern):
     severity = Severity.HIGH
     axis = "noise"
     message = "Redundant comment explaining variable assignment to itself - peak AI slop"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(
         r"const\s+(\w+)\s*=\s*\1\s*;?\s*//\s*(?:set|assign|store)\s+\1\b",
         re.IGNORECASE,
@@ -73,6 +78,7 @@ class JSExcessiveBoilerplateComment(RegexPattern):
     severity = Severity.MEDIUM
     axis = "noise"
     message = "Boilerplate comment that restates the obvious - adds zero insight"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(
         r"//\s*This (?:function|component|hook|variable|method).* (?:does|is|handles?|returns?|takes?|processes?)",
         re.IGNORECASE,
@@ -86,6 +92,7 @@ class JSDebugLogWithComment(RegexPattern):
     severity = Severity.MEDIUM
     axis = "noise"
     message = "Debug log with apologetic comment - AI trying to justify its existence"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(
         r"console\.(log|debug|info)\([^)]+\)\s*;\s*//\s*(?:debug|temp|test|check|log|print)",
         re.IGNORECASE,
@@ -99,6 +106,7 @@ class JSProductionConsoleLog(RegexPattern):
     severity = Severity.MEDIUM
     axis = "noise"
     message = "Found console logging in production code - remove before deployment"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(
         r"console\.(log|warn|error|info|debug|trace)\(",
     )

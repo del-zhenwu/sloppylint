@@ -234,9 +234,11 @@ Architectural and organizational issues:
 | Language | Extension | Analysis Type | Patterns |
 |----------|-----------|---------------|----------|
 | Python | `.py` | AST + Regex | 46 |
-| Go | `.go` | Regex | 6 |
-| JavaScript | `.js`, `.jsx` | Regex | 30 |
-| TypeScript | `.ts`, `.tsx` | Regex | 30 |
+| Go | `.go` | Regex | 5 |
+| JavaScript | `.js`, `.jsx` | Regex | 29 |
+| TypeScript | `.ts`, `.tsx` | Regex | 29 |
+
+**Language-Specific Pattern Filtering**: DeepLint automatically applies only the relevant patterns to each file based on its language. This ensures accurate detection across multi-language projects and prevents false positives.
 
 ### Python Patterns (46 total)
 
@@ -245,16 +247,16 @@ Architectural and organizational issues:
 - **Style (10)**: overconfident_comment, god_function, deep_nesting, etc.
 - **Structure (12)**: unused_import, bare_except, duplicate_code, etc.
 
-### Go Patterns (6 total)
+### Go Patterns (5 total)
 
 - **Noise (3)**: go_debug_print, go_todo_comment, go_redundant_comment
-- **Style (3)**: go_overconfident_comment, go_hedging_comment, go_python_pattern
+- **Style (2)**: go_overconfident_comment, go_hedging_comment
 
-### JavaScript/TypeScript Patterns (30 total)
+### JavaScript/TypeScript Patterns (29 total)
 
 - **Noise (8)**: js_debug_console, js_todo_comment, js_production_console_log, etc.
 - **Quality (4)**: js_hallucinated_react_import, js_hallucinated_next_import, etc.
-- **Style (7)**: js_overconfident_comment, js_var_keyword, js_nested_ternary_abuse, etc.
+- **Style (6)**: js_overconfident_comment, js_var_keyword, js_nested_ternary_abuse, etc.
 - **TypeScript (6)**: ts_any_type_usage, ts_unsafe_type_assertion, etc.
 - **React (4)**: js_useEffect_derived_state, js_setState_in_loop, etc.
 - **Structure (1)**: js_missing_error_handling

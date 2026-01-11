@@ -49,6 +49,9 @@ class BasePattern(ABC):
     severity: Severity = Severity.MEDIUM
     axis: str = "noise"
     message: str = ""
+    # Languages this pattern applies to. None means all languages.
+    # Examples: ["python"], ["go"], ["javascript", "typescript"]
+    supported_languages: list[str] | None = None
     # Set by detector per-file to track multi-line string locations
     multiline_string_lines: set[int] | None = None
 

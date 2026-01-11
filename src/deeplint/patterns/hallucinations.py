@@ -491,7 +491,7 @@ class HallucinatedAttribute(ASTPattern):
     INVALID_ATTRIBUTES = {
         # JavaScript
         "length": "Use len(obj) not obj.length - JavaScript pattern",
-        "size": "Use len(obj) not obj.size - JavaScript pattern (unless pandas/set)",
+        # Removed "size" - valid in pandas, sets, and other contexts
         "prototype": "Python doesn't have prototypes - JavaScript pattern",
         "__proto__": "Python doesn't have __proto__ - JavaScript pattern",
         "constructor": "Use type(obj) or obj.__class__ - JavaScript pattern",

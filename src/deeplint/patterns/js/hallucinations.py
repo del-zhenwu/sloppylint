@@ -12,6 +12,7 @@ class JSHallucinatedReactImport(RegexPattern):
     severity = Severity.CRITICAL
     axis = "quality"
     message = "Hallucinated React import - these APIs do NOT exist in 'react' package"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(
         r"import\s*\{[^}]*(useRouter|useParams|useSearchParams|Link|Image|Script)[^}]*\}\s*from\s*['\"]react['\"]",
         re.IGNORECASE,
@@ -25,6 +26,7 @@ class JSHallucinatedNextImport(RegexPattern):
     severity = Severity.CRITICAL
     axis = "quality"
     message = "Next.js API imported from 'react' - these are page-level exports, not imports"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(
         r"import\s*\{[^}]*(getServerSideProps|getStaticProps|getStaticPaths)[^}]*\}\s*from\s*['\"]react['\"]",
         re.IGNORECASE,
@@ -38,6 +40,7 @@ class JSTodoImplementationPlaceholder(RegexPattern):
     severity = Severity.HIGH
     axis = "quality"
     message = "AI gave up and wrote a TODO instead of implementing logic"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(
         r"//\s*(?:TODO|FIXME|HACK).*(?:implement|add|finish|complete|your code|logic|here)",
         re.IGNORECASE,
@@ -51,6 +54,7 @@ class JSAssumptionComment(RegexPattern):
     severity = Severity.HIGH
     axis = "quality"
     message = "AI making unverified assumptions - dangerous in production"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(
         r"\b(assuming|assumes?|presumably|apparently|it seems|seems like)\b.{0,50}\b(that|this|the|it)\b",
         re.IGNORECASE,

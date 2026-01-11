@@ -12,8 +12,10 @@ class GoOverconfidentComment(RegexPattern):
     severity = Severity.MEDIUM
     axis = "style"
     message = "Overconfident comment - code should speak for itself"
+    supported_languages = ["go"]
+    # Removed "just", "simply", "easy" - too common in natural language
     pattern = re.compile(
-        r"//\s*(obviously|clearly|simply|just|easy|trivial|of course)\b",
+        r"//\s*(obviously|clearly|trivial|of course)\b",
         re.IGNORECASE,
     )
 
@@ -25,22 +27,10 @@ class GoHedgingComment(RegexPattern):
     severity = Severity.HIGH
     axis = "style"
     message = "Hedging comment indicates AI uncertainty - verify implementation"
+    supported_languages = ["go"]
+    # Removed "probably", "might" - can be legitimate in context
     pattern = re.compile(
-        r"//\s*(should work|hopefully|probably|might|try this|i think)\b",
-        re.IGNORECASE,
-    )
-
-
-class GoPythonPatterns(RegexPattern):
-    """Detect Python patterns leaked into Go code."""
-
-    id = "go_python_pattern"
-    severity = Severity.HIGH
-    axis = "style"
-    message = "Python pattern in Go code - use Go idioms"
-    # Only detecting Python-specific method patterns that are invalid in Go
-    pattern = re.compile(
-        r"(\.append\(|\.split\(|\.join\()",
+        r"//\s*(should work|hopefully|try this|i think)\b",
         re.IGNORECASE,
     )
 
@@ -48,5 +38,4 @@ class GoPythonPatterns(RegexPattern):
 GO_STYLE_PATTERNS = [
     GoOverconfidentComment(),
     GoHedgingComment(),
-    GoPythonPatterns(),
 ]

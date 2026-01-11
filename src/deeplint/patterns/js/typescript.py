@@ -12,6 +12,7 @@ class TSAnyTypeUsage(RegexPattern):
     severity = Severity.HIGH
     axis = "quality"
     message = "Found 'any' type usage - replace with specific type or 'unknown'"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(
         r":\s*any\b",
     )
@@ -24,6 +25,7 @@ class TSArrayAnyType(RegexPattern):
     severity = Severity.HIGH
     axis = "quality"
     message = "Found Array<any> type usage - replace with specific type or unknown[]"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(
         r"Array\s*<\s*any\s*>",
     )
@@ -36,6 +38,7 @@ class TSGenericAnyType(RegexPattern):
     severity = Severity.HIGH
     axis = "quality"
     message = "Found generic <any> type usage - replace with specific type or unknown"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(
         r"<\s*any\s*>",
     )
@@ -48,6 +51,7 @@ class TSUnsafeTypeAssertion(RegexPattern):
     severity = Severity.HIGH
     axis = "quality"
     message = "Found unsafe 'as any' type assertion - use proper type guards or validation"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(
         r"\s+as\s+any\b",
     )
@@ -60,6 +64,7 @@ class TSUnsafeDoubleTypeAssertion(RegexPattern):
     severity = Severity.HIGH
     axis = "quality"
     message = "Found unsafe double type assertion - consider using 'as unknown as Type'"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(
         r"as\s+\w+\s+as\s+\w+",
     )
@@ -72,6 +77,7 @@ class TSIndexSignatureAny(RegexPattern):
     severity = Severity.HIGH
     axis = "quality"
     message = "Found index signature with 'any' type - replace with specific type or unknown"
+    supported_languages = ["javascript", "typescript"]
     pattern = re.compile(
         r"\[\s*[\"'`]?(\w+)[\"'`]?[^\]]*\]\s*:\s*any",
     )

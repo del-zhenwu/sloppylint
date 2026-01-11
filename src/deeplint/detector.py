@@ -150,6 +150,20 @@ class Detector:
         except (OSError, UnicodeDecodeError):
             return issues
 
+        # Determine the language of the current file
+        from deeplint.language_detector import get_language_from_extension
+
+        file_language = get_language_from_extension(path.suffix)
+        if not file_language:
+            return issues
+
+        # Filter patterns to only those that support this language
+        applicable_patterns = [
+            p
+            for p in self.patterns
+            if p.supported_languages is None or file_language in p.supported_languages
+        ]
+
         # Only Python files use AST analysis for now
         # Other languages use line-based pattern matching only
         if path.suffix in [".py", ".pyw"]:
@@ -160,19 +174,19 @@ class Detector:
                 return issues
 
             # Run AST analyzer
-            analyzer = ASTAnalyzer(path, content, self.patterns)
+            analyzer = ASTAnalyzer(path, content, applicable_patterns)
             issues.extend(analyzer.analyze(tree))
 
             # Get multi-line string locations for accurate string detection
             multiline_string_lines = get_multiline_string_lines(content)
 
             # Set multi-line context on patterns before line-based checks
-            for pattern in self.patterns:
+            for pattern in applicable_patterns:
                 pattern.multiline_string_lines = multiline_string_lines
 
         # Run line-based patterns (for all languages)
         lines = content.splitlines()
-        for pattern in self.patterns:
+        for pattern in applicable_patterns:
             if hasattr(pattern, "check_line"):
                 for lineno, line in enumerate(lines, start=1):
                     pattern_issues = pattern.check_line(line, lineno, path)
